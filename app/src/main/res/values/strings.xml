@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">zHOtel</string>
+    <string-array name="categorias">
+        <item>Sleccione:</item>
+        <item>Standar</item>
+        <item>Duplex</item>
+        <item>VIP</item>
+    </string-array>
 </resources>
