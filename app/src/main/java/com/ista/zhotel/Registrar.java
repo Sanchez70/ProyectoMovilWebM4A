@@ -14,16 +14,24 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class Registrar extends AppCompatActivity {
     TextInputEditText emailText, paswordText;
     Button boton1;
     TextView textView1;
     private FirebaseAuth mAuth;
+    private TextView birthDateTextView;
     public void onStart () {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -40,18 +48,7 @@ public class Registrar extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         boton1= findViewById(R.id.button);
         textView1 = findViewById(R.id.textViewRe);
-        TextView textView = findViewById(R.id.textView);
-        CalendarView calendarView = findViewById(R.id.calendarView);
-
-        // Establecer un listener para manejar eventos de selección de fecha
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Manejar la fecha seleccionada
-                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                Toast.makeText(Registrar.this, "Fecha seleccionada: " + selectedDate, Toast.LENGTH_SHORT).show();
-            }
-        });
+        calendar();
         textView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +93,44 @@ public class Registrar extends AppCompatActivity {
         });
 
     }
+    public void calendar(){
 
 
+            birthDateTextView = findViewById(R.id.birthDateTextView);
+
+            birthDateTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDatePicker();
+                }
+            });
+        }
+
+        private void showDatePicker() {
+            CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+            // Puedes personalizar las restricciones del calendario según tus necesidades.
+
+            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+            builder.setTitleText("Selecciona tu fecha de nacimiento");
+            builder.setCalendarConstraints(constraintsBuilder.build());
+
+            MaterialDatePicker<Long> datePicker = builder.build();
+
+            datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                @Override
+                public void onPositiveButtonClick(Long selection) {
+                    // Manejar la fecha seleccionada
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(selection);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    String selectedDate = dateFormat.format(calendar.getTime());
+
+                    birthDateTextView.setText(selectedDate);
+                }
+            });
+
+            datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
+        }
 
 }
