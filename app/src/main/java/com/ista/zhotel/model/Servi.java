@@ -2,17 +2,17 @@ package com.ista.zhotel.model;
 
 public class Servi {
 
-    private long id;
+    private long idTipo_servicio;
     private String titulo;
     private String descripcion;
     private String foto;
 
-    public long getId() {
-        return id;
+    public long getIdTipo_servicio() {
+        return idTipo_servicio;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setIdTipo_servicio(long id) {
+        this.idTipo_servicio = idTipo_servicio;
     }
 
     public String getTitulo() {

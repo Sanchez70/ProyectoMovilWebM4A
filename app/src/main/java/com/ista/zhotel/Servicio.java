@@ -14,7 +14,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.ista.zhotel.model.MyAdapter;
 import com.ista.zhotel.model.Servi;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,12 +37,12 @@ public class Servicio extends AppCompatActivity {
     }
 
     private void getDatos(){
-        String url="http://192.168.40.228:8080/api/tiposervicio";//endpoint.
+        String url="http://192.168.40.228:8081/api/tiposervicio";//endpoint.
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                pasarJson(response);
+               pasarJson(response);
                 Log.d("Response", response.toString());
             }
         }, new Response.ErrorListener() {
@@ -53,7 +52,7 @@ public class Servicio extends AppCompatActivity {
             }
         }
         );
-        Volley.newRequestQueue(this).add(jsonArrayRequest);//hacemos la peticion al API
+        Volley.newRequestQueue(getApplication()).add(jsonArrayRequest);//hacemos la peticion al API
     }
 
     private void pasarJson( JSONArray array){
@@ -63,10 +62,10 @@ public class Servicio extends AppCompatActivity {
             Servi servi=new Servi();
             try {
                 json=array.getJSONObject(i);
-                servi.setId(json.getInt("id"));//como viene del API
+                servi.setIdTipo_servicio(json.getInt("idTipo_servicio"));//como viene del API
                 servi.setTitulo(json.getString("titulo"));
                 servi.setDescripcion(json.getString("descripcion"));
-                //servi.setFoto(json.getString("email"));
+                servi.setFoto(json.getString("foto"));
                 servis.add(servi);
 
             } catch (JSONException e) {
