@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,18 @@ public class Registrar extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         boton1= findViewById(R.id.button);
         textView1 = findViewById(R.id.textViewRe);
+        TextView textView = findViewById(R.id.textView);
+        CalendarView calendarView = findViewById(R.id.calendarView);
+
+        // Establecer un listener para manejar eventos de selección de fecha
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                // Manejar la fecha seleccionada
+                String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                Toast.makeText(Registrar.this, "Fecha seleccionada: " + selectedDate, Toast.LENGTH_SHORT).show();
+            }
+        });
         textView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,5 +96,7 @@ public class Registrar extends AppCompatActivity {
         });
 
     }
+
+
 
 }

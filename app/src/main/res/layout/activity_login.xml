@@ -4,79 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login"
-    android:orientation="horizontal">
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Login">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+
         android:layout_width="match_parent"
-        android:layout_height="706dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <Space
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailLogin"
+            android:hint="Email"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="55dp" />
 
-        <ImageView
-            android:id="@+id/imageView13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="45dp" />
+    <com.google.android.material.textfield.TextInputLayout
 
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/paswordLogin"
+            android:hint="Contraseña"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:layout_height="56dp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="45dp" />
 
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/pasword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberPassword"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="171dp"
+        android:layout_height="wrap_content"
+        android:text="Login" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="45dp" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
 
-        <Button
-            android:id="@+id/buttonLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Button" />
-
-        <TextView
-            android:id="@+id/textViewLo"
-            android:layout_width="96dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="TextView" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textViewLo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Requistrarse"
+        android:textAlignment="center" />
 
 </LinearLayout>

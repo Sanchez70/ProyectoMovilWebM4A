@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        emailTextLogin= findViewById(R.id.paswordLogin);
+        emailTextLogin= findViewById(R.id.emailLogin);
         paswordTextLogin=findViewById(R.id.paswordLogin);
         mAuth = FirebaseAuth.getInstance();
         botonLogin= findViewById(R.id.buttonLogin);
@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Ingreso Exitoso", Toast.LENGTH_SHORT).show();
-                            Intent intent= new Intent(getApplicationContext(),MainActivity.class);
+                            Intent intent= new Intent(getApplicationContext(),PantallaPrincipal.class);
                             startActivity(intent);
                             finish();
                         } else {;
