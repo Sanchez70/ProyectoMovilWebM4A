@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    app:layout_constraintGuide_percent="0.5"
     tools:context=".Registrar">
 
     <TextView
@@ -20,7 +21,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50sp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,13 +30,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cedula"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Cedula"
@@ -46,13 +47,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/telefono"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Telefono"
@@ -60,7 +61,12 @@
 
 
         </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,13 +76,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Nombre"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Nombre"
@@ -87,13 +93,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Nombre1"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Segundo Nombre"
@@ -102,9 +108,10 @@
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
     <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -114,13 +121,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Apellido"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Apellido"
@@ -131,13 +138,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
 
-            android:layout_width="198dp"
+            android:layout_width="178dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/Apellido1"
-                android:layout_width="192dp"
+                android:layout_width="172dp"
                 android:layout_height="55dp"
                 android:gravity="center"
                 android:hint="Segundo Apelldio"
@@ -150,7 +157,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="10dp" />
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
@@ -159,7 +166,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/birthDateTextView"
-            android:layout_width="390dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"
@@ -173,7 +180,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="10dp" />
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
@@ -182,7 +189,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
-            android:layout_width="390dp"
+            android:layout_width="350dp"
             android:layout_height="55dp"
             android:gravity="center"
             android:hint="Email"
@@ -192,7 +199,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="10dp" />
 
     <com.google.android.material.textfield.TextInputLayout
 
@@ -203,13 +210,17 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/pasword"
             android:hint="Contraseña"
-            android:layout_width="390dp"
+            android:layout_width="350dp"
             android:gravity="center"
             android:layout_height="56dp"
             tools:ignore="SpeakableTextPresentCheck" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
 
     <Button
         android:id="@+id/button"
@@ -219,14 +230,15 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:layout_height="10dp" />
 
     <TextView
         android:id="@+id/textViewRe"
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Iniciar sesion"
-        android:textSize="16sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

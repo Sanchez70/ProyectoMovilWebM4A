@@ -11,39 +11,49 @@
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailLogin"
-            android:hint="Email"
-            android:layout_width="match_parent"
-            android:layout_height="55dp" />
+            android:layout_width="390dp"
+            android:layout_height="55dp"
+            android:hint="Email" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <com.google.android.material.textfield.TextInputLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/paswordLogin"
-            android:hint="Contraseña"
-            android:layout_width="match_parent"
-            android:layout_height="56dp" />
+            android:layout_width="390dp"
+            android:layout_height="56dp"
+            android:hint="Contraseña" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="171dp"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:text="Iniciar Sesión" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:layout_height="15dp" />
 
     <TextView
         android:id="@+id/textViewLo"
