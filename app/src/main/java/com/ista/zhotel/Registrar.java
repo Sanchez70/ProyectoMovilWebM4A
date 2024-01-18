@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Registrar extends AppCompatActivity {
     TextInputEditText emailText, paswordText;
@@ -106,31 +107,36 @@ public class Registrar extends AppCompatActivity {
             });
         }
 
-        private void showDatePicker() {
-            CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-            // Puedes personalizar las restricciones del calendario según tus necesidades.
+    private void showDatePicker() {
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        // Puedes personalizar las restricciones del calendario según tus necesidades.
 
-            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-            builder.setTitleText("Selecciona tu fecha de nacimiento");
-            builder.setCalendarConstraints(constraintsBuilder.build());
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Selecciona tu fecha de nacimiento");
+        builder.setCalendarConstraints(constraintsBuilder.build());
 
-            MaterialDatePicker<Long> datePicker = builder.build();
+        MaterialDatePicker<Long> datePicker = builder.build();
 
-            datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                @Override
-                public void onPositiveButtonClick(Long selection) {
-                    // Manejar la fecha seleccionada
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(selection);
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                // Manejar la fecha seleccionada
+                Calendar calendar = Calendar.getInstance();
+                // Establecer la zona horaria del dispositivo
+                calendar.setTimeZone(TimeZone.getDefault());
+                calendar.setTimeInMillis(selection);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    String selectedDate = dateFormat.format(calendar.getTime());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                // Establecer la zona horaria del nuevo Calendar
+                dateFormat.setTimeZone(TimeZone.getDefault());
 
-                    birthDateTextView.setText(selectedDate);
-                }
-            });
+                String selectedDate = dateFormat.format(calendar.getTime());
 
-            datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
-        }
+                birthDateTextView.setText(selectedDate);
+            }
+        });
+
+        datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
+    }
 
 }
