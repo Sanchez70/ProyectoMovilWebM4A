@@ -43,4 +43,9 @@ public class PantallaPrincipal extends AppCompatActivity {
         Intent servicio = new Intent(this, Servicio.class);
         startActivity(servicio);
     }
+
+    public void Reservar(View view){
+        Intent reservar = new Intent(this, PantallaReservar.class);
+        startActivity(reservar);
+    }
 }

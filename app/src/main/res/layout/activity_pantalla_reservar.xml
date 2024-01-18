@@ -258,7 +258,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:focusable="false"
                         android:hint="Fecha de Inicio"
+                        android:clickable="true"
                         android:inputType="text"
                         android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -282,6 +284,9 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="Fecha Fin"
+                    android:focusable="false"
+                    android:textAllCaps="false"
+                    android:clickable="true"
                     android:inputType="text"
                     android:minHeight="48dp" />
             </com.google.android.material.textfield.TextInputLayout>
