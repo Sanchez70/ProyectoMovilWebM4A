@@ -32,7 +32,6 @@ public class Servicio extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyAdapter(this, servis);
         recyclerView.setAdapter(adapter);
-
         getDatos();
     }
 
@@ -42,7 +41,7 @@ public class Servicio extends AppCompatActivity {
 
             @Override
             public void onResponse(JSONArray response) {
-               pasarJson(response);
+                pasarJson(response);
                 Log.d("Response", response.toString());
             }
         }, new Response.ErrorListener() {
@@ -52,22 +51,29 @@ public class Servicio extends AppCompatActivity {
             }
         }
         );
-        Volley.newRequestQueue(getApplication()).add(jsonArrayRequest);//hacemos la peticion al API
+        Volley.newRequestQueue(this).add(jsonArrayRequest);//hacemos la peticion al API
     }
 
     private void pasarJson( JSONArray array){
 
         for(int i=0;i<array.length();i++){
             JSONObject json=null;
-            Servi servi=new Servi();
+            Servi cliente= new Servi();
             try {
                 json=array.getJSONObject(i);
-                servi.setIdTipo_servicio(json.getInt("idTipo_servicio"));//como viene del API
-                servi.setTitulo(json.getString("titulo"));
-                servi.setDescripcion(json.getString("descripcion"));
-                servi.setFoto(json.getString("foto"));
-                servis.add(servi);
-
+                cliente.setIdTipo_servicio(json.getInt("idTipo_servicio"));//como viene del API
+                cliente.setTitulo(json.getString("titulo"));
+                cliente.setDescripcion(json.getString("descripciontipo"));
+                String base64Image = json.getString("foto");
+                if (base64Image.startsWith("data:image/jpeg;base64,")) {
+                    base64Image = base64Image.substring("data:image/jpeg;base64,".length());
+                } else if (base64Image.startsWith("data:image/jpg;base64,")) {
+                    base64Image = base64Image.substring("data:image/jpg;base64,".length());
+                } else if (base64Image.startsWith("data:image/png;base64,")) {
+                    base64Image = base64Image.substring("data:image/png;base64,".length());
+                }
+                cliente.setFoto(base64Image);
+                servis.add(cliente);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
