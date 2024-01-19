@@ -15,6 +15,7 @@ import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class PantallaReservar extends AppCompatActivity {
     private TextView txtFechaIn;
@@ -48,20 +49,31 @@ public class PantallaReservar extends AppCompatActivity {
     }
 
     private void showDatePickerIn() {
-        txtFechaIn = findViewById(R.id.fechaInic);
-        final Calendar c = Calendar.getInstance();
-        dia=c.get(Calendar.DAY_OF_MONTH);
-        mes=c.get(Calendar.MONTH);
-        ano=c.get(Calendar.YEAR);
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Seleccione la fecha de inicio");
+        builder.setCalendarConstraints(constraintsBuilder.build());
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        MaterialDatePicker<Long> datePicker = builder.build();
+
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                txtFechaIn.setText(dayOfMonth+"/"+(month+1)+"/"+year);
+            public void onPositiveButtonClick(Long selection) {
+                // Manejar la fecha seleccionada
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getDefault());
+                calendar.setTimeInMillis(selection);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String selectedDate = dateFormat.format(calendar.getTime());
+                dateFormat.setTimeZone(TimeZone.getDefault());
+                txtFechaFin.setText(selectedDate);
             }
-        },dia,mes,ano);
-        datePickerDialog.show();
+        });
+
+        datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
     }
+    
 
     private void showDatePickerFin() {
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
@@ -76,11 +88,12 @@ public class PantallaReservar extends AppCompatActivity {
             public void onPositiveButtonClick(Long selection) {
                 // Manejar la fecha seleccionada
                 Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getDefault());
                 calendar.setTimeInMillis(selection);
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String selectedDate = dateFormat.format(calendar.getTime());
-
+                dateFormat.setTimeZone(TimeZone.getDefault());
                 txtFechaFin.setText(selectedDate);
             }
         });
