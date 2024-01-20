@@ -16,8 +16,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailLogin"
-            android:layout_width="390dp"
-            android:layout_height="55dp"
+            android:layout_width="350dp"
+            android:layout_height="56dp"
             android:hint="Email" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -34,7 +34,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/paswordLogin"
-            android:layout_width="390dp"
+            android:layout_width="350dp"
             android:layout_height="56dp"
             android:hint="Contraseña" />
 

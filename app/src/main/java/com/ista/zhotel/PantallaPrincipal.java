@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,12 +19,14 @@ public class PantallaPrincipal extends AppCompatActivity {
     Spinner comboCate;
     FirebaseAuth auth;
     Button inicio;
+    static String correoUsuario;
     FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
         inicio= findViewById(R.id.button4);
+        Log.d("TAG", "Respuesta del servidor: " + correoUsuario);
                 inicio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

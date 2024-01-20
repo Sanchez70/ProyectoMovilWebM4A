@@ -6,12 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -21,10 +30,18 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
+import com.ista.zhotel.model.Persona;
+import com.ista.zhotel.model.cliente;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class Registrar extends AppCompatActivity {
@@ -76,6 +93,10 @@ public class Registrar extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            guardarPersona();
+                            guardarClietnes();
+                            EditText auxUsuario=findViewById(R.id.email);
+                            PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
                             Toast.makeText(Registrar.this, "Authentication Exit.",
                                     Toast.LENGTH_SHORT).show();
                             Intent intent= new Intent(getApplicationContext(),Login.class);
@@ -138,5 +159,80 @@ public class Registrar extends AppCompatActivity {
 
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
     }
+    private void guardarPersona(){
+        EditText auxcedula=findViewById(R.id.cedula);
+        EditText auxnombre=findViewById(R.id.Nombre);
+        EditText auxnombre1=findViewById(R.id.Nombre1);
+        EditText auxapelldio=findViewById(R.id.Apellido);
+        EditText auxapellido2=findViewById(R.id.Apellido1);
+        EditText auxtelefono=findViewById(R.id.telefono);
+        Persona persona = new Persona();
+        persona.setCedula_persona(auxcedula.getText().toString());
+        persona.setNombre(auxnombre.getText().toString());
+        persona.setNombre2(auxnombre1.getText().toString());
+        persona.setApellido(auxapelldio.getText().toString());
+        persona.setApellido2(auxapellido2.getText().toString());
+        persona.setTelefono(auxtelefono.getText().toString());
+
+        realizarSolicitudPOST("http://192.168.100.6:8081/api/personas",persona);
+    }
+    public void guardarClietnes() {
+        EditText auxcorreo = findViewById(R.id.email);
+        EditText auxContraseña = findViewById(R.id.pasword);
+        EditText auxcedula = findViewById(R.id.cedula);
+
+        cliente clienteNuevo= new cliente();
+        clienteNuevo.setContrasena(auxContraseña.getText().toString());
+        clienteNuevo.setUsuario(auxcorreo.getText().toString());
+        clienteNuevo.setCedula_persona(auxcedula.getText().toString());
+        realizarSolicitudPOST("http://192.168.100.6:8081/api/clientes",clienteNuevo);
+
+    }
+
+    private <T>void realizarSolicitudPOST(String url,  final T objeto) {
+        // Obtener la instancia de la cola de solicitudes de Volley
+        RequestQueue queue = Volley.newRequestQueue(this);
+        Gson gson = new Gson();
+        final String personaJson = gson.toJson(objeto);
+        // Crear una solicitud POST
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Manejar la respuesta del servidor aquí
+                        Log.d("TAG", "Respuesta del servidor: " + response);
+                        try {
+                            // Puedes convertir la respuesta a un objeto JSON si es necesario
+                            JSONObject jsonResponse = new JSONObject(response);
+                            // Manejar el objeto JSON según tus necesidades
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Manejar errores de la solicitud aquí
+                        Log.e("TAG", "Error en la solicitud: " + error.toString());
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                // Aquí puedes especificar los datos que deseas enviar en el cuerpo de la solicitud
+                return personaJson.getBytes();
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // Configurar el encabezado Content-Type
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+
 
 }
