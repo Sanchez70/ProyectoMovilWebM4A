@@ -4,9 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EFEDED"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".Login">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="393dp"
+        android:layout_height="79dp"
+        app:srcCompat="@drawable/img_20240115_wa0001_removebg_preview" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 
     <com.google.android.material.textfield.TextInputLayout
 
@@ -47,10 +58,11 @@
 
     <Button
         android:id="@+id/buttonLogin"
-        android:layout_width="171dp"
-        android:layout_height="wrap_content"
-        android:text="Iniciar Sesión" />
-
+        android:layout_width="350dp"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/material_dynamic_primary40"
+        android:text="Iniciar Sesión"
+        app:cornerRadius="0dp" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="15dp" />
@@ -60,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Requistrarse"
+        android:text="Reguistrarse"
         android:textAlignment="center" />
 
 </LinearLayout>

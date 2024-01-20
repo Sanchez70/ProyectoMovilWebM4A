@@ -92,22 +92,30 @@ public class Registrar extends AppCompatActivity {
                 mAuth.createUserWithEmailAndPassword(emailUser, passwordlUser).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            guardarPersona();
-                            guardarClietnes();
-                            EditText auxUsuario=findViewById(R.id.email);
-                            PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
-                            Toast.makeText(Registrar.this, "Authentication Exit.",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent intent= new Intent(getApplicationContext(),Login.class);
-                            startActivity(intent);
-                            finish();
+                        try {
 
-                        } else {
-                            Toast.makeText(Registrar.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            ;
+                            if (task.isSuccessful()){
+                                guardarPersona();
+                                guardarClietnes();
+
+                                EditText auxUsuario=findViewById(R.id.email);
+                                PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
+
+                                Toast.makeText(Registrar.this, "Authentication Exit.",
+                                        Toast.LENGTH_SHORT).show();
+                                Intent intent= new Intent(getApplicationContext(),Login.class);
+                                startActivity(intent);
+                                finish();
+
+                            } else {
+                                Toast.makeText(Registrar.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                ;
+                            }
+                        }catch (Exception e){
+
                         }
+
                     }
                 });
 

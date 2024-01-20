@@ -41,12 +41,13 @@
             android:id="@+id/button9"
             android:layout_width="295dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#2196F3"
             android:fontFamily="serif-monospace"
+            app:cornerRadius="0dp"
             android:onClick="Iniciar"
             android:text="Iniciar Sesión"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:backgroundTint="@color/material_dynamic_primary40"/>
     </LinearLayout>
 
     <LinearLayout
@@ -59,12 +60,13 @@
             android:id="@+id/button11"
             android:layout_width="295dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#2196F3"
+            android:backgroundTint="@color/material_dynamic_primary40"
             android:fontFamily="serif-monospace"
             android:onClick="Registro"
             android:text="Registrarse"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:cornerRadius="0dp"/>
     </LinearLayout>
 
 </LinearLayout>
