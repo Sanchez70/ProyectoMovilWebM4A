@@ -60,7 +60,7 @@
         android:id="@+id/buttonLogin"
         android:layout_width="350dp"
         android:layout_height="60dp"
-        android:backgroundTint="@color/material_dynamic_primary40"
+        android:backgroundTint="#056688"
         android:text="Iniciar Sesión"
         app:cornerRadius="0dp" />
     <Space

@@ -124,6 +124,7 @@
             android:layout_width="63dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="Perfil"
             android:text="Button"
             android:translationX="0dp" />
 

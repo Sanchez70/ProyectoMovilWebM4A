@@ -51,4 +51,9 @@ public class PantallaPrincipal extends AppCompatActivity {
         Intent reservar = new Intent(this, PantallaReservar.class);
         startActivity(reservar);
     }
+
+    public void Perfil(View view){
+        Intent perfil = new Intent(this, PantallaPerfilUsuario.class);
+        startActivity(perfil);
+    }
 }
