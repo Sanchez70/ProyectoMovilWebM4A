@@ -36,7 +36,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:backgroundTint="#2196F3"
+                android:onClick="Perfil"
+                android:text="Perfil"
+                app:icon="@drawable/icons8_user_24" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -48,7 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:backgroundTint="#2196F3"
+                android:text="Cerrar Sesión"
+                app:icon="@drawable/icons8_logout_rounded_25" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -60,7 +65,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:backgroundTint="#2196F3"
+                android:text="Servicios"
+                app:icon="@drawable/icons8_24h_25" />
 
             <Space
                 android:layout_width="wrap_content"

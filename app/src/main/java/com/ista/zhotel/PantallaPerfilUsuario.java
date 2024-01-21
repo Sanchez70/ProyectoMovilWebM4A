@@ -1,7 +1,9 @@
 package com.ista.zhotel;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +32,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
     private Long idCliente;
     private EditText txtTelefono,txtnombre,txtnombre2,txtapellido,txtapellido2,txtcontrasena;
     private Button btnEditar;
+    private int edad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +53,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //updateDatosUsuario(txtcontrasena.getText().toString(),idCliente);
-                updateDatosPersona(txtnombre.getText().toString(),txtnombre2.getText().toString(),txtapellido.getText().toString(),txtapellido2.getText().toString(),txtTelefono.getText().toString(),cedula);
+                updateDatosUsuario(txtcontrasena.getText().toString(),PantallaPrincipal.correoUsuario,idCliente);
+                updateDatosPersona(txtnombre.getText().toString(),txtnombre2.getText().toString(),txtapellido.getText().toString(),txtapellido2.getText().toString(),txtTelefono.getText().toString(),edad,cedula);
+                salir(v);
             }
         });
     }
@@ -57,6 +65,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         String url="http://192.168.18.5:8081/api/clientes/usuario/"+usuario;//endpoint.
         Log.d("He","Llegue al metodo cargar cliente");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
+
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -80,7 +89,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("He",error.getMessage());
+                Log.d("ERROR DE CONEXION",error.getMessage());
             }
         });
         Volley.newRequestQueue(this).add(jsonArrayRequest);
@@ -100,6 +109,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                         String apellido = response.getString("apellido");
                         String apellido2 = response.getString("apellido2");
                         String telefono = response.getString("telefono");
+                        edad = response.getInt("edad");
                         txtnombre = findViewById(R.id.txtNombre);
                         txtnombre2 = findViewById(R.id.txtNombre2);
                         txtapellido = findViewById(R.id.txtApellido);
@@ -112,6 +122,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                         txtTelefono.setText(telefono);
                         Log.d("He", apellido);
                         Log.d("He", nombre);
+                        Log.d("He", String.valueOf(edad));
                     }else{
                         Toast.makeText(getApplicationContext(), "Persona no encontrada", Toast.LENGTH_LONG).show();
                     }
@@ -122,7 +133,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("He",error.getMessage());
+                Log.d("JSON ERROR",error.getMessage());
             }
         });
         Volley.newRequestQueue(this).add(jsonObjectRequest);
@@ -130,12 +141,13 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
 
 
     //ACTUALIZAR DATOS DE USUARIO
-    public void updateDatosUsuario(String contrasena,Long id){
+    public void updateDatosUsuario(String contrasena,String usuario,Long id){
         String url="http://192.168.18.5:8081/api/clientes/"+id;
 
         JSONObject requestBodyUsuario = new JSONObject();
         try{
             requestBodyUsuario.put("contrasena",contrasena);
+            requestBodyUsuario.put("usuario",usuario);
         }catch(JSONException j){
             j.printStackTrace();
         }
@@ -152,10 +164,11 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
             }
         });
         Volley.newRequestQueue(this).add(jsonObjectRequestUsuario);
+        updatePassUsuario(contrasena);
     }
 
     //ACTUALIZAR DATOS DE PERSONA
-    public void updateDatosPersona(String nom1,String nom2, String ape1, String ape2, String tel, String cedula){
+    public void updateDatosPersona(String nom1,String nom2, String ape1, String ape2, String tel, int edad ,String cedula){
         String url="http://192.168.18.5:8081/api/personas/"+cedula;
 
         JSONObject requestBodyPersona = new JSONObject();
@@ -165,6 +178,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
             requestBodyPersona.put("apellido",ape1);
             requestBodyPersona.put("apellido2",ape2);
             requestBodyPersona.put("telefono",tel);
+            requestBodyPersona.put("edad",edad);
         }catch(JSONException j){
             j.printStackTrace();
         }
@@ -182,4 +196,35 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         });
         Volley.newRequestQueue(this).add(jsonObjectRequestPersona);
     }
+    //Actualizar contraseña en firebase
+    public void updatePassUsuario(String contrasena){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+
+            String newPassword = contrasena;
+
+            user.updatePassword(newPassword)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("He", "Contraseña cambiada en firebase");
+                                //Toast.makeText(getApplicationContext(), "Contraseña actualizada con éxito", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error al actualizar la contraseña", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
+    public void salir(View view){
+        Intent inicio = new Intent(this, PantallaPrincipal.class);
+        startActivity(inicio);
+        finish();
+    }
+
+
 }

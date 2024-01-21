@@ -37,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,6 +51,7 @@ public class Registrar extends AppCompatActivity {
     TextView textView1;
     private FirebaseAuth mAuth;
     private TextView birthDateTextView;
+    private String selectedDate;
     public void onStart () {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -137,6 +140,11 @@ public class Registrar extends AppCompatActivity {
     private void showDatePicker() {
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
         // Puedes personalizar las restricciones del calendario según tus necesidades.
+        Calendar maxFecha = Calendar.getInstance();
+        maxFecha.set(Calendar.YEAR, 2024);
+        maxFecha.set(Calendar.MONTH, Calendar.DECEMBER);
+        maxFecha.set(Calendar.DAY_OF_MONTH, 31);
+        constraintsBuilder.setEnd(maxFecha.getTimeInMillis());
 
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Selecciona tu fecha de nacimiento");
@@ -155,9 +163,9 @@ public class Registrar extends AppCompatActivity {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 // Establecer la zona horaria del nuevo Calendar
-                dateFormat.setTimeZone(TimeZone.getDefault());
-
-                String selectedDate = dateFormat.format(calendar.getTime());
+                //dateFormat.setTimeZone(TimeZone.getDefault());
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                selectedDate = dateFormat.format(calendar.getTime());
 
                 birthDateTextView.setText(selectedDate);
             }
@@ -179,8 +187,8 @@ public class Registrar extends AppCompatActivity {
         persona.setApellido(auxapelldio.getText().toString());
         persona.setApellido2(auxapellido2.getText().toString());
         persona.setTelefono(auxtelefono.getText().toString());
-
-        realizarSolicitudPOST("http://192.168.100.6:8081/api/personas",persona);
+        persona.setEdad(calcularEdad());
+        realizarSolicitudPOST("http://192.168.18.5:8081/api/personas",persona);
     }
     public void guardarClietnes() {
         EditText auxcorreo = findViewById(R.id.email);
@@ -191,7 +199,7 @@ public class Registrar extends AppCompatActivity {
         clienteNuevo.setContrasena(auxContraseña.getText().toString());
         clienteNuevo.setUsuario(auxcorreo.getText().toString());
         clienteNuevo.setCedula_persona(auxcedula.getText().toString());
-        realizarSolicitudPOST("http://192.168.100.6:8081/api/clientes",clienteNuevo);
+        realizarSolicitudPOST("http://192.168.18.5:8081/api/clientes",clienteNuevo);
 
     }
 
@@ -237,6 +245,15 @@ public class Registrar extends AppCompatActivity {
             }
         };
         queue.add(stringRequest);
+    }
+
+    public int calcularEdad(){
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate fechaIn = LocalDate.parse(selectedDate,format);
+        LocalDate fechaFin = LocalDate.now();
+        int total = (int) fechaIn.until(fechaFin).getYears();
+
+        return total;
     }
 
 

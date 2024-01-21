@@ -70,7 +70,7 @@ public class PantallaPrincipal extends AppCompatActivity {
 
     private void getDatos(){
         // String url="http://192.168.40.228:8081/api/habitaciones";//endpoint.
-        String url="http://192.168.100.6:8081/api/habitaciones";
+        String url="http://192.168.18.5:8081/api/habitaciones";
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -127,5 +127,11 @@ public class PantallaPrincipal extends AppCompatActivity {
     public void Perfil(View view){
         Intent perfil = new Intent(this, PantallaPerfilUsuario.class);
         startActivity(perfil);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        FirebaseAuth.getInstance().signOut();
     }
 }

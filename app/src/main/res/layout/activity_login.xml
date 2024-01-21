@@ -29,6 +29,7 @@
             android:id="@+id/emailLogin"
             android:layout_width="350dp"
             android:layout_height="56dp"
+            android:gravity="center"
             android:hint="Email" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,6 +48,7 @@
             android:id="@+id/paswordLogin"
             android:layout_width="350dp"
             android:layout_height="56dp"
+            android:gravity="center"
             android:hint="Contraseña" />
 
 
@@ -72,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Reguistrarse"
+        android:text="Registrarse"
         android:textAlignment="center" />
 
 </LinearLayout>
