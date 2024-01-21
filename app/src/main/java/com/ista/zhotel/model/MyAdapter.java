@@ -18,7 +18,13 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<Servi> clientes;
-
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
     public MyAdapter(Context c, ArrayList<Servi> p) {
         context = c;
         clientes = p;
@@ -27,14 +33,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.cardview_layout, parent, false));
-
+        View v = LayoutInflater.from(context).inflate(R.layout.cardview_layout, parent, false);
+        return new MyViewHolder(v, mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.titulo.setText(clientes.get(position).getTitulo());
         holder.descripcion.setText(clientes.get(position).getDescripcion());
+        holder.textView10.setText(String.valueOf(clientes.get(position).getIdTipo_servicio()));
         String base64Image = clientes.get(position).getFoto();
         byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -47,13 +54,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView titulo, descripcion;
+        TextView titulo, descripcion,textView10;
         ImageView imagen;
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
+            textView10 = itemView.findViewById(R.id.textView10);
             titulo = itemView.findViewById(R.id.titulo);
             descripcion = itemView.findViewById(R.id.descripcion);
             imagen = itemView.findViewById(R.id.imagen);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

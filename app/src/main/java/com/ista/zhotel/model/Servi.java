@@ -12,7 +12,7 @@ public class Servi {
     }
 
     public void setIdTipo_servicio(long id) {
-        this.idTipo_servicio = idTipo_servicio;
+        this.idTipo_servicio = id;
     }
 
     public String getTitulo() {
