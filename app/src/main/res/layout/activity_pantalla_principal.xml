@@ -15,15 +15,6 @@
             android:layout_height="130dp"
             app:srcCompat="@drawable/img_20240115_wa0001_removebg_preview" />
 
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Habitaciones Disponibles"
-            android:textSize="48sp" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewhabi"
             android:layout_width="match_parent"

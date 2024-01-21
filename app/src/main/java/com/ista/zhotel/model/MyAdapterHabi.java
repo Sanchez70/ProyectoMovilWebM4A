@@ -1,6 +1,7 @@
 package com.ista.zhotel.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ista.zhotel.PantallaReservar;
 import com.ista.zhotel.R;
 
 import java.util.ArrayList;
@@ -41,7 +43,19 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
         byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         holder.imagen.setImageBitmap(decodedByte);
+        final int finalPosition = position;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PantallaReservar.class);
+                //si quieres pasar datos directos desde la card
+                intent.putExtra("EXTRA_ID_HABITACION", habis.get(finalPosition).getIdHabitaciones());
+                context.startActivity(intent);
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -58,4 +72,6 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
             imagen = itemView.findViewById(R.id.imagen);
         }
     }
+
+
 }

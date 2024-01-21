@@ -63,6 +63,13 @@ public class Servicio extends AppCompatActivity {
                     long idTipo_servicio= serviSeleccionado.getIdTipo_servicio();
                     String estado="Pendiente";
                     guardarDatos(descripcion, idHabitaciones, idTipo_servicio, estado);
+                    new AlertDialog.Builder(Servicio.this)
+                            .setTitle("Confirmación")
+                            .setMessage("Servicio solicitado correctamente")
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .show();
+
                 } else {
                     new AlertDialog.Builder(Servicio.this)
                             .setTitle("Alerta")
