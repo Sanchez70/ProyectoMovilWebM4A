@@ -70,7 +70,7 @@ public class PantallaPrincipal extends AppCompatActivity {
 
     private void getDatos(){
         // String url="http://192.168.40.228:8081/api/habitaciones";//endpoint.
-        String url="http://192.168.0.119:8081/api/habitaciones";
+        String url="http://192.168.100.6:8081/api/habitaciones";
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -97,6 +97,7 @@ public class PantallaPrincipal extends AppCompatActivity {
                 habita.setIdHabitaciones((long) json.getInt("idHabitaciones"));//como viene del API
                 habita.setnHabitacion(json.getInt("nHabitacion"));
                 habita.setDescriphabi(json.getString("descriphabi"));
+                habita.setPrecio(json.getDouble("precio"));
                 String base64Image = json.getString("foto");
                 if (base64Image.startsWith("data:image/jpeg;base64,")) {
                     base64Image = base64Image.substring("data:image/jpeg;base64,".length());

@@ -96,7 +96,6 @@ public class Registrar extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 guardarPersona();
                                 guardarClietnes();
-
                                 EditText auxUsuario=findViewById(R.id.email);
                                 PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
 
@@ -181,7 +180,7 @@ public class Registrar extends AppCompatActivity {
         persona.setApellido2(auxapellido2.getText().toString());
         persona.setTelefono(auxtelefono.getText().toString());
 
-        realizarSolicitudPOST("http://192.168.18.5:8081/api/personas",persona);
+        realizarSolicitudPOST("http://192.168.100.6:8081/api/personas",persona);
     }
     public void guardarClietnes() {
         EditText auxcorreo = findViewById(R.id.email);
@@ -192,7 +191,7 @@ public class Registrar extends AppCompatActivity {
         clienteNuevo.setContrasena(auxContraseña.getText().toString());
         clienteNuevo.setUsuario(auxcorreo.getText().toString());
         clienteNuevo.setCedula_persona(auxcedula.getText().toString());
-        realizarSolicitudPOST("http://192.168.18.5:8081/api/clientes",clienteNuevo);
+        realizarSolicitudPOST("http://192.168.100.6:8081/api/clientes",clienteNuevo);
 
     }
 

@@ -30,8 +30,9 @@ public class PantallaReservar extends AppCompatActivity {
     private String selectedDateFin;
 
     private TextView txtTotal;
-    private TextView txtDias;
-
+    private TextView txtDias, txtprecio;
+    public static double precio;
+    public static int idHabicionRe;
      private AutoCompleteTextView spnPersonas;
 
     @Override
@@ -45,6 +46,8 @@ public class PantallaReservar extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnPersonas.setAdapter(adapter);
         calendar();
+        txtprecio.setText(String.valueOf(precio));
+
     }
 
     public void calendar(){
@@ -52,6 +55,7 @@ public class PantallaReservar extends AppCompatActivity {
         txtFechaIn = findViewById(R.id.fechaInic);
         txtFechaFin = findViewById(R.id.fechafin);
         txtDias = findViewById(R.id.txtDias);
+        txtprecio= findViewById(R.id.precioHabi);
         txtFechaIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +146,10 @@ public class PantallaReservar extends AppCompatActivity {
                 txtFechaFin.setText(selectedDateFin);
                 txtDias.setText(calcularDias());
 
+
+
+
+
             }
         });
 
@@ -156,4 +164,8 @@ public class PantallaReservar extends AppCompatActivity {
 
         return String.valueOf(total);
     }
+
+
+
+
 }

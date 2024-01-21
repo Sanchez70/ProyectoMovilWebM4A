@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,10 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PantallaReservar.class);
-                //si quieres pasar datos directos desde la card
+                int idHabitaciones= Math.toIntExact(habis.get(finalPosition).getIdHabitaciones());
+                PantallaReservar.precio=habis.get(finalPosition).getPrecio();
+                PantallaReservar.idHabicionRe=idHabitaciones;
+                Log.d("TAG","idHabitaciones"+idHabitaciones);
                 intent.putExtra("EXTRA_ID_HABITACION", habis.get(finalPosition).getIdHabitaciones());
                 context.startActivity(intent);
             }
