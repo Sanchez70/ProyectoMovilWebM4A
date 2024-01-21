@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EFEDED"
+    android:backgroundTint="#EFEDED"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".PantallaReservar">
@@ -44,36 +46,27 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="207dp"
-        android:layout_height="146dp"
+        android:layout_width="230dp"
+        android:layout_height="229dp"
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="157dp"
-            android:layout_height="184dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="210dp"
-            android:layout_marginBottom="13dp" />
-
+            android:id="@+id/imagenBase"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="428dp">
+        android:layout_width="355dp"
+        android:layout_height="428dp"
+        android:background="#EFEDED">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="205dp"
+            android:layout_marginEnd="190dp"
             android:background="#61D4D8D8"
             android:orientation="vertical">
 
@@ -100,6 +93,7 @@
                     android:layout_width="21dp"
                     android:layout_height="70dp"
                     android:layout_weight="1"
+                    app:srcCompat="@drawable/icons8_wifi_50"
                     tools:srcCompat="@drawable/icons8_wifi_50" />
 
                 <TextView
@@ -128,6 +122,7 @@
                     android:layout_width="61dp"
                     android:layout_height="70dp"
                     android:layout_weight="1"
+                    app:srcCompat="@drawable/icons8_autom_vil_50"
                     tools:srcCompat="@drawable/icons8_autom_vil_50" />
 
                 <TextView
@@ -156,6 +151,7 @@
                     android:layout_width="21dp"
                     android:layout_height="70dp"
                     android:layout_weight="1"
+                    app:srcCompat="@drawable/icons8_televisi_n_48"
                     tools:srcCompat="@drawable/icons8_televisi_n_48" />
 
                 <TextView
@@ -205,16 +201,17 @@
 
                 <Button
                     android:id="@+id/button10"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="115dp"
+                    android:layout_height="match_parent"
                     android:backgroundTint="#2196F3"
                     android:text="RESERVAR"
+                    android:textSize="14sp"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="205dp"
+            android:layout_width="190dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
@@ -234,8 +231,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/spnPersonas"
@@ -269,8 +266,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
@@ -282,10 +280,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:clickable="true"
                         android:ems="10"
                         android:focusable="false"
                         android:hint="Fecha de Inicio"
-                        android:clickable="true"
                         android:inputType="text"
                         android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -294,34 +292,36 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
-                android:orientation="horizontal"
-                android:gravity="center">
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="66dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fechafin"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Fecha Fin"
-                    android:focusable="false"
-                    android:textAllCaps="false"
-                    android:clickable="true"
-                    android:inputType="text"
-                    android:minHeight="48dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="66dp"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/fechafin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:hint="Fecha Fin"
+                        android:inputType="text"
+                        android:minHeight="48dp"
+                        android:textAllCaps="false" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
@@ -357,18 +357,21 @@
                     android:id="@+id/imageView9"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icons8_visa_48"
                     tools:srcCompat="@drawable/icons8_visa_48" />
 
                 <ImageView
                     android:id="@+id/imageView10"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icons8_emoji_de_tarjeta_de_cr_dito_48"
                     tools:srcCompat="@drawable/icons8_emoji_de_tarjeta_de_cr_dito_48" />
 
                 <ImageView
                     android:id="@+id/imageView11"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icons8_banco_48"
                     tools:srcCompat="@drawable/icons8_banco_48" />
             </LinearLayout>
 
@@ -383,6 +386,7 @@
                     android:layout_width="23dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="TOTAL A PAGAR" />
 
                 <TextView

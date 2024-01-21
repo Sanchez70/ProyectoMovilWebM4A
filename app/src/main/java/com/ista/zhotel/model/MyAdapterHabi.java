@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ista.zhotel.PantallaPrincipal;
 import com.ista.zhotel.PantallaReservar;
 import com.ista.zhotel.R;
 
@@ -51,7 +52,10 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
                 Intent intent = new Intent(context, PantallaReservar.class);
                 int idHabitaciones= Math.toIntExact(habis.get(finalPosition).getIdHabitaciones());
                 PantallaReservar.precio=habis.get(finalPosition).getPrecio();
+                PantallaReservar.decodedByte1= decodedByte;
                 PantallaReservar.idHabicionRe=idHabitaciones;
+                PantallaReservar.correoUsuRe= PantallaPrincipal.correoUsuario;
+                Log.d("TAG", "Respuesta del servidor: " + PantallaReservar.correoUsuRe);
                 Log.d("TAG","idHabitaciones"+idHabitaciones);
                 intent.putExtra("EXTRA_ID_HABITACION", habis.get(finalPosition).getIdHabitaciones());
                 context.startActivity(intent);

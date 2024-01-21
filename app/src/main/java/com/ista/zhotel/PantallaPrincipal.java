@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class PantallaPrincipal extends AppCompatActivity {
     FirebaseAuth auth;
     Button inicio;
-    static String correoUsuario;
+    public  static String correoUsuario;
     FirebaseUser user;
     RecyclerView recyclerViewhabi;
     MyAdapterHabi adapter;

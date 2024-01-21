@@ -2,25 +2,44 @@ package com.ista.zhotel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.gson.Gson;
+
 import android.app.DatePickerDialog;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class PantallaReservar extends AppCompatActivity {
@@ -28,12 +47,17 @@ public class PantallaReservar extends AppCompatActivity {
     private TextView txtFechaFin;
     private String selectedDateIn;
     private String selectedDateFin;
-
+    private String cedula;
     private TextView txtTotal;
     private TextView txtDias, txtprecio;
     public static double precio;
     public static int idHabicionRe;
+    public static String correoUsuRe;
+
+    public static Bitmap decodedByte1;
+
      private AutoCompleteTextView spnPersonas;
+    ImageView adaptarImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +65,8 @@ public class PantallaReservar extends AppCompatActivity {
         setContentView(R.layout.activity_pantalla_reservar);
         //Cargar datos al spinner.
         spnPersonas = findViewById(R.id.nroPersonas);
+        adaptarImagen= findViewById(R.id.imagenBase);
+        adaptarImagen.setImageBitmap(decodedByte1);
         Integer[] datos={1,2,3,4};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,datos);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -146,7 +172,7 @@ public class PantallaReservar extends AppCompatActivity {
                 txtFechaFin.setText(selectedDateFin);
                 txtDias.setText(calcularDias());
 
-
+                totalPrecio();
 
 
 
@@ -165,7 +191,98 @@ public class PantallaReservar extends AppCompatActivity {
         return String.valueOf(total);
     }
 
+    public void totalPrecio(){
+        String inputText = txtDias.getText().toString().trim();
+        txtTotal = findViewById(R.id.txtTotal);
+        if (!inputText.isEmpty()) {
+            try {
+                double precioIni = Double.valueOf(inputText);
+                double totalDo = precioIni * precio;
+                txtTotal.setText(String.valueOf(totalDo));
+            } catch (NumberFormatException e) {
+                txtTotal.setText("0");
+                e.printStackTrace();
+            }
+        } else {
+            txtTotal.setText("0");
+        }
+    }
+    public void getDatos(String usuario){
+        String url="http://192.168.18.5:8081/api/clientes/usuario/"+usuario;//endpoint.
+        Log.d("He","Llegue al metodo cargar cliente");
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    if(response.length()>0) {
+                        JSONObject jsonObjectCliente = response.getJSONObject(0);
+                        cedula = jsonObjectCliente.getString("cedula_persona");
+                        Log.d("He", cedula);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException j) {
+                    j.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("He",error.getMessage());
+            }
+        });
+        Volley.newRequestQueue(this).add(jsonArrayRequest);
+    }
 
+
+    private <T>void realizarSolicitudPOST(String url,  final T objeto) {
+        // Obtener la instancia de la cola de solicitudes de Volley
+        RequestQueue queue = Volley.newRequestQueue(this);
+        Gson gson = new Gson();
+        final String personaJson = gson.toJson(objeto);
+        // Crear una solicitud POST
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Manejar la respuesta del servidor aquí
+                        Log.d("TAG", "Respuesta del servidor: " + response);
+                        try {
+                            // Puedes convertir la respuesta a un objeto JSON si es necesario
+                            JSONObject jsonResponse = new JSONObject(response);
+                            // Manejar el objeto JSON según tus necesidades
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Manejar errores de la solicitud aquí
+                        Log.e("TAG", "Error en la solicitud: " + error.toString());
+                    }
+                }) {
+            @Override
+            public byte[] getBody() {
+                // Aquí puedes especificar los datos que deseas enviar en el cuerpo de la solicitud
+                return personaJson.getBytes();
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // Configurar el encabezado Content-Type
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+public void guardarReserva(){
+        getDatos(correoUsuRe);
+
+}
 
 
 }
