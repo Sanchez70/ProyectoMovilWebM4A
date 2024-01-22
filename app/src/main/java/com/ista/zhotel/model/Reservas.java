@@ -5,8 +5,8 @@ import java.util.Date;
 public class Reservas {
     private Long idReserva;
     private Long idPago;
-    private Date fechaSalida;
-    private Date fechaEntrada;
+    private String fechaSalida;
+    private String fechaEntrada;
     private Double total;
     private Long idHabitaciones;
     private Long idRecepcionista;
@@ -31,19 +31,19 @@ public class Reservas {
         this.idPago = idPago;
     }
 
-    public Date getFechaSalida() {
+    public String getFechaSalida() {
         return fechaSalida;
     }
 
-    public void setFechaSalida(Date fechaSalida) {
+    public void setFechaSalida(String fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 
-    public Date getFechaEntrada() {
+    public String getFechaEntrada() {
         return fechaEntrada;
     }
 
-    public void setFechaEntrada(Date fechaEntrada) {
+    public void setFechaEntrada(String fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
 

@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +26,11 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
+import com.ista.zhotel.model.Callback;
+import com.ista.zhotel.model.DetalleFactura;
+import com.ista.zhotel.model.EncabezadoCallBack;
+import com.ista.zhotel.model.EncabezadoFactura;
+import com.ista.zhotel.model.Reservas;
 
 import android.app.DatePickerDialog;
 import android.widget.Toast;
@@ -32,10 +39,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -47,7 +55,9 @@ public class PantallaReservar extends AppCompatActivity {
     private TextView txtFechaFin;
     private String selectedDateIn;
     private String selectedDateFin;
-    private String cedula;
+    public  Long cedula;
+    public  Long idReserva;
+    public  Long idEncabezado;
     private TextView txtTotal;
     private TextView txtDias, txtprecio;
     public static double precio;
@@ -73,6 +83,10 @@ public class PantallaReservar extends AppCompatActivity {
         spnPersonas.setAdapter(adapter);
         calendar();
         txtprecio.setText(String.valueOf(precio));
+        guardarReserva();
+        getDatos(correoUsuRe);
+        Log.d("TAG","CEDULA INICIANTE: " +cedula);
+
 
     }
 
@@ -208,7 +222,7 @@ public class PantallaReservar extends AppCompatActivity {
         }
     }
     public void getDatos(String usuario){
-        String url="http://192.168.18.5:8081/api/clientes/usuario/"+usuario;//endpoint.
+        String url="http://192.168.137.19:8081/api/clientes/usuario/"+usuario;//endpoint.
         Log.d("He","Llegue al metodo cargar cliente");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
@@ -216,14 +230,15 @@ public class PantallaReservar extends AppCompatActivity {
                 try {
                     if(response.length()>0) {
                         JSONObject jsonObjectCliente = response.getJSONObject(0);
-                        cedula = jsonObjectCliente.getString("cedula_persona");
-                        Log.d("He", cedula);
+                        cedula = jsonObjectCliente.getLong("idCliente");
+                        Log.d("He", "cedula "+cedula);
                     }else{
                         Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -254,6 +269,7 @@ public class PantallaReservar extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -261,6 +277,7 @@ public class PantallaReservar extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         // Manejar errores de la solicitud aquí
                         Log.e("TAG", "Error en la solicitud: " + error.toString());
+
                     }
                 }) {
             @Override
@@ -272,17 +289,179 @@ public class PantallaReservar extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 // Configurar el encabezado Content-Type
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
+                headers.put("Content-Type", "application/json; charset=utf-8");
                 return headers;
             }
         };
         queue.add(stringRequest);
     }
 
-public void guardarReserva(){
-        getDatos(correoUsuRe);
+    public void guardarReserva() {
+
+
+        Button guardar = findViewById(R.id.button10);
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText diasRece = findViewById(R.id.txtDias);
+                EditText fechaEntara = findViewById(R.id.fechaInic);
+                EditText fechaFin = findViewById(R.id.fechafin);
+                EditText personaRece = findViewById(R.id.nroPersonas);
+                TextView totalRece = findViewById(R.id.txtTotal);
+                String fechaEntradaString = fechaEntara.getText().toString();
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate fechaEntrada = LocalDate.parse(fechaEntradaString, inputFormatter);
+
+                // Obtener la fecha de salida y formatearla
+                String fechaSalidaString = fechaFin.getText().toString();
+                LocalDate fechaSalida = LocalDate.parse(fechaSalidaString, inputFormatter);
+
+                // Convertir las fechas al formato "yyyy-MM-dd"
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd",Locale.getDefault());
+                String fechaEntradaFormatted = fechaEntrada.format(outputFormatter);
+                String fechaSalidaFormatted = fechaSalida.format(outputFormatter);
+                Reservas miReserva = new Reservas();
+                miReserva.setIdHabitaciones((long) idHabicionRe);
+                miReserva.setDias(Integer.valueOf(diasRece.getText().toString()));
+                Log.d("TAG","Fechas;"+fechaEntradaFormatted+fechaSalidaFormatted);
+                try {
+
+
+                    // Convertir LocalDate a java.util.Date
+                    miReserva.setFechaEntrada(fechaEntradaFormatted);
+                    miReserva.setFechaSalida(fechaSalidaFormatted);
+                    miReserva.setIdRecepcionista(null);
+                    miReserva.setIdPago(null);
+                    miReserva.setIdCliente(cedula);
+                    miReserva.setEstado("Pendiente");
+                    miReserva.setnPersona(Integer.valueOf(personaRece.getText().toString()));
+                    miReserva.setTotal(Double.valueOf(totalRece.getText().toString()));
+                    Log.d("TAG", "RESERVA:" + miReserva.toString());
+                    realizarSolicitudPOST("http://192.168.137.19:8081/api/reservas", miReserva);
+                    crearEncabezad();
+                    crearDetalle();
+                } catch (DateTimeParseException | NumberFormatException e) {
+                    e.printStackTrace();
+                    // Manejar el caso en el que la fecha o el número de personas no son válidos
+                    Toast.makeText(getApplicationContext(), "Fecha o número de personas no válidos", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+public void buscarReser(final EncabezadoCallBack callBack){
+    String url="http://192.168.137.19:8081/api/reservas";//endpoint.
+    Log.d("He","Llegue al metodo cargar reserva");
+
+    JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
+
+        @Override
+        public void onResponse(JSONArray response) {
+            try {
+                if(response.length()>0) {
+
+                    JSONObject jsonObjectCliente = response.getJSONObject(response.length() -1);
+                    idReserva = jsonObjectCliente.getLong("idReserva");
+                    callBack.onReservaObtenido(idReserva);
+
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException j) {
+                j.printStackTrace();
+
+            }
+
+
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            Log.d("He",error.getMessage());
+        }
+    });
+    Volley.newRequestQueue(this).add(jsonArrayRequest);
+
 
 }
 
+public void buscarEcabezado(final Callback callback){
+    String url="http://192.168.137.19:8081/api/encabezadofactura";//endpoint.
+    Log.d("He","Llegue al metodo cargar detalle");
+    JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
+        @Override
+        public void onResponse(JSONArray response) {
+            try {
+                if(response.length()>0) {
+                    JSONObject jsonObjectCliente = response.getJSONObject(response.length() -1);
+                    idEncabezado = jsonObjectCliente.getLong("idEncabezado");
+                    Log.d("He", "id encabezado:  " + idEncabezado);
+                    callback.onEncabezadoObtenido(idEncabezado);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException j) {
+                j.printStackTrace();
+            }
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.d("He",error.getMessage());
+        }
+    });
+    Volley.newRequestQueue(this).add(jsonArrayRequest);
+}
+
+public void crearEncabezad(){
+
+    buscarReser(new EncabezadoCallBack() {
+        @Override
+        public void onReservaObtenido(long idReserva) {
+            Log.d("He", "id reservar en el crear:  " + idReserva);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd",Locale.getDefault());
+            LocalDate fechaFin1 = LocalDate.now();
+            String fechaFactura = fechaFin1.format(outputFormatter);
+            TextView totalRece = findViewById(R.id.txtTotal);
+            EncabezadoFactura encabezado= new EncabezadoFactura();
+            getDatos(correoUsuRe);
+            encabezado.setIdCliente(cedula);
+            encabezado.setFechaFactura(fechaFactura);
+            encabezado.setIdReserva(idReserva+1);
+            encabezado.setTotal(Double.valueOf(totalRece.getText().toString()));
+            realizarSolicitudPOST("http://192.168.137.19:8081/api/encabezadofactura", encabezado);
+        }
+
+        @Override
+        public void onError(String errorMessage) {
+
+        }
+    });
+
+
+    }
+    public void crearDetalle(){
+        buscarEcabezado(new Callback() {
+            @Override
+            public void onEncabezadoObtenido(long idEncabezado) {
+                Log.d("He", "id encabezado en el crear:  " + idEncabezado);
+                DetalleFactura detalle= new DetalleFactura();
+                detalle.setIdEncabezado(idEncabezado+1);
+                detalle.setSubTotal(precio);
+                realizarSolicitudPOST("http://192.168.137.19:8081/api/detallefactura", detalle);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.d("He", "callback  " + errorMessage);
+            }
+        });
+
+    }
 
 }

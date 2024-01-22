@@ -85,6 +85,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -129,6 +130,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -156,6 +158,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Toast.makeText(getApplicationContext(), "ACTUALIZACIÓN CORRECTA", Toast.LENGTH_LONG).show();
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -187,6 +190,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Toast.makeText(getApplicationContext(), "ACTUALIZACIÓN CORRECTA", Toast.LENGTH_LONG).show();
+
             }
         }, new Response.ErrorListener() {
             @Override

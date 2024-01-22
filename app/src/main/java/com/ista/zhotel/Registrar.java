@@ -188,7 +188,7 @@ public class Registrar extends AppCompatActivity {
         persona.setApellido2(auxapellido2.getText().toString());
         persona.setTelefono(auxtelefono.getText().toString());
         persona.setEdad(calcularEdad());
-        realizarSolicitudPOST("http://192.168.18.5:8081/api/personas",persona);
+        realizarSolicitudPOST("http://192.168.100.6:8081/api/personas",persona);
     }
     public void guardarClietnes() {
         EditText auxcorreo = findViewById(R.id.email);
@@ -222,6 +222,7 @@ public class Registrar extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
                 },
                 new Response.ErrorListener() {

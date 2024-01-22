@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class DetalleFactura {
     private Long idDetalleFac;
-    private Long idReserva;
+
     private Double subTotal;
     private Long idEncabezado;
 
@@ -16,13 +16,6 @@ public class DetalleFactura {
         this.idDetalleFac = idDetalleFac;
     }
 
-    public Long getIdReserva() {
-        return idReserva;
-    }
-
-    public void setIdReserva(Long idReserva) {
-        this.idReserva = idReserva;
-    }
 
     public Double getSubTotal() {
         return subTotal;

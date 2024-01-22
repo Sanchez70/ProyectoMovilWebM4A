@@ -4,9 +4,10 @@ import java.util.Date;
 
 public class EncabezadoFactura {
     private Long idEncabezado;
-    private String cedula_persona;
+    private Long idCliente;
+    private Long idReserva;
 
-    private Date fechaFactura;
+    private String fechaFactura;
     private Double total;
 
     public Long getIdEncabezado() {
@@ -17,19 +18,19 @@ public class EncabezadoFactura {
         this.idEncabezado = idEncabezado;
     }
 
-    public String getCedula_persona() {
-        return cedula_persona;
+    public Long getIdCliente() {
+        return idCliente;
     }
 
-    public void setCedula_persona(String cedula_persona) {
-        this.cedula_persona = cedula_persona;
+    public void setIdCliente(Long cedula_persona) {
+        this.idCliente = cedula_persona;
     }
 
-    public Date getFechaFactura() {
+    public String getFechaFactura() {
         return fechaFactura;
     }
 
-    public void setFechaFactura(Date fechaFactura) {
+    public void setFechaFactura(String fechaFactura) {
         this.fechaFactura = fechaFactura;
     }
 
@@ -39,5 +40,13 @@ public class EncabezadoFactura {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
     }
 }
