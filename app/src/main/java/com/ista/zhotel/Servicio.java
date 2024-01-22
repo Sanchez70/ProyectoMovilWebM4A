@@ -7,11 +7,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ista.zhotel.model.Habi;
 import com.ista.zhotel.model.MyAdapter;
 import com.ista.zhotel.model.Servi;
@@ -46,7 +51,7 @@ public class Servicio extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         List<Habi> habitacion = PantallaPrincipal.habitacion;
         Habi opcionSeleccione = new Habi();
-        opcionSeleccione.setIdHabitaciones(0L); // Asegúrate de que 0 no corresponda a ninguna habitación real
+        opcionSeleccione.setIdHabitaciones(0L);
         habitacion.add(0, opcionSeleccione);
         Spinner spinner = (Spinner) findViewById(R.id.spinner1);
         ArrayAdapter<Habi> adapterh = new ArrayAdapter<Habi>(this, android.R.layout.simple_spinner_item, habitacion);
@@ -54,22 +59,38 @@ public class Servicio extends AppCompatActivity {
         spinner.setAdapter(adapterh);
         adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(final int position) {
                 Habi habitacionSeleccionada = (Habi) spinner.getSelectedItem();
                 if (habitacionSeleccionada != null && habitacionSeleccionada.getIdHabitaciones() != 0) {
-                    String descripcion="Envie un empleado por el servicio solicitado";
-                    long idHabitaciones = habitacionSeleccionada.getIdHabitaciones();
-                    Servi serviSeleccionado = servis.get(position);
-                    long idTipo_servicio= serviSeleccionado.getIdTipo_servicio();
-                    String estado="Pendiente";
-                    guardarDatos(descripcion, idHabitaciones, idTipo_servicio, estado);
-                    new AlertDialog.Builder(Servicio.this)
-                            .setTitle("Confirmación")
-                            .setMessage("Servicio solicitado correctamente")
-                            .setPositiveButton(android.R.string.ok, null)
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .show();
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Servicio.this);
+                    builder.setTitle("Describa su Servicio");
+                    final EditText input = new EditText(Servicio.this);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+                    builder.setPositiveButton("Solicitar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String descripcion = input.getText().toString();
+                            long idHabitaciones = habitacionSeleccionada.getIdHabitaciones();
+                            Servi serviSeleccionado = servis.get(position);
+                            long idTipo_servicio = serviSeleccionado.getIdTipo_servicio();
+                            String estado = "Pendiente";
+                            guardarDatos(descripcion, idHabitaciones, idTipo_servicio, estado);
+                            new AlertDialog.Builder(Servicio.this)
+                                    .setTitle("Confirmación")
+                                    .setMessage("Servicio solicitado correctamente")
+                                    .setPositiveButton(android.R.string.ok, null)
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .show();
+                        }
+                    });
+                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
                 } else {
                     new AlertDialog.Builder(Servicio.this)
                             .setTitle("Alerta")
@@ -83,8 +104,9 @@ public class Servicio extends AppCompatActivity {
     }
 
     private void getDatos(){
-        //String url="http://192.168.40.228:8081/api/tiposervicio";//
-        String url="http://192.168.0.119:8081/api/tiposervicio";
+        servis.clear();
+        String url="http://192.168.40.228:8081/api/tiposervicio";//
+        //String url="http://192.168.0.119:8081/api/tiposervicio";
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -127,8 +149,8 @@ public class Servicio extends AppCompatActivity {
     }
 
     private void guardarDatos(String descripcion, Long idHabitaciones, Long idTipo_servicio, String estado) {
-        //String url = "http://192.168.40.228:8081/api/servicio";
-        String url = "http://192.168.0.119:8081/api/servicio";
+        String url = "http://192.168.40.228:8081/api/servicio";
+        //String url = "http://192.168.0.119:8081/api/servicio";
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("descripcion", descripcion);
@@ -150,5 +172,17 @@ public class Servicio extends AppCompatActivity {
             }
         });
         Volley.newRequestQueue(this).add(jsonObjectRequest);
+    }
+
+    public void Perfil(View view){
+        Intent perfil = new Intent(this, PantallaPerfilUsuario.class);
+        startActivity(perfil);
+    }
+
+    public void Sesion(View v) {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent= new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+        finish();
     }
 }
