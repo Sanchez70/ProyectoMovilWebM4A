@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
     }
-
     public void Registro(View view){
         Intent registro = new Intent(this, Registrar.class);
         startActivity(registro);
@@ -29,5 +28,4 @@ public class MainActivity extends AppCompatActivity {
         Intent registro1 = new Intent(this, Login.class);
         startActivity(registro1);
     }
-
 }

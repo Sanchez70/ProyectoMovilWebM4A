@@ -98,37 +98,29 @@ public class Registrar extends AppCompatActivity {
 
                             if (task.isSuccessful()){
                                 guardarPersona();
-                                guardarClietnes();
+                                //guardarClietnes();
                                 EditText auxUsuario=findViewById(R.id.email);
                                 PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
-
                                 Toast.makeText(Registrar.this, "Authentication Exit.",
                                         Toast.LENGTH_SHORT).show();
                                 Intent intent= new Intent(getApplicationContext(),Login.class);
                                 startActivity(intent);
                                 finish();
-
                             } else {
                                 Toast.makeText(Registrar.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                ;
                             }
                         }catch (Exception e){
 
                         }
-
                     }
                 });
-
             }
         });
-
     }
     public void calendar(){
 
-
             birthDateTextView = findViewById(R.id.birthDateTextView);
-
             birthDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,18 +147,12 @@ public class Registrar extends AppCompatActivity {
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
-                // Manejar la fecha seleccionada
                 Calendar calendar = Calendar.getInstance();
-                // Establecer la zona horaria del dispositivo
                 calendar.setTimeZone(TimeZone.getDefault());
                 calendar.setTimeInMillis(selection);
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                // Establecer la zona horaria del nuevo Calendar
-                //dateFormat.setTimeZone(TimeZone.getDefault());
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 selectedDate = dateFormat.format(calendar.getTime());
-
                 birthDateTextView.setText(selectedDate);
             }
         });
@@ -188,58 +174,55 @@ public class Registrar extends AppCompatActivity {
         persona.setApellido2(auxapellido2.getText().toString());
         persona.setTelefono(auxtelefono.getText().toString());
         persona.setEdad(calcularEdad());
-        realizarSolicitudPOST("http://192.168.100.6:8081/api/personas",persona);
+        realizarSolicitudPOST("http://192.168.40.228:8081/api/personas",persona);
+        guardarClietnes();
+        //realizarSolicitudPOST("http://192.168.0.119:8081/api/personas",persona);
+        //realizarSolicitudPOST("http://192.168.19.119:8081/api/personas",persona);
+
+
     }
     public void guardarClietnes() {
         EditText auxcorreo = findViewById(R.id.email);
         EditText auxContraseña = findViewById(R.id.pasword);
         EditText auxcedula = findViewById(R.id.cedula);
-
         cliente clienteNuevo= new cliente();
         clienteNuevo.setContrasena(auxContraseña.getText().toString());
         clienteNuevo.setUsuario(auxcorreo.getText().toString());
         clienteNuevo.setCedula_persona(auxcedula.getText().toString());
-        realizarSolicitudPOST("http://192.168.18.5:8081/api/clientes",clienteNuevo);
+        realizarSolicitudPOST("http://192.168.40.228:8081/api/clientes",clienteNuevo);
+        //realizarSolicitudPOST("http://192.168.0.119:8081/api/clientes",clienteNuevo);
+        //realizarSolicitudPOST("http://192.168.19.119:8081/api/clientes",clienteNuevo);
 
     }
 
     private <T>void realizarSolicitudPOST(String url,  final T objeto) {
-        // Obtener la instancia de la cola de solicitudes de Volley
         RequestQueue queue = Volley.newRequestQueue(this);
         Gson gson = new Gson();
         final String personaJson = gson.toJson(objeto);
-        // Crear una solicitud POST
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Manejar la respuesta del servidor aquí
                         Log.d("TAG", "Respuesta del servidor: " + response);
                         try {
-                            // Puedes convertir la respuesta a un objeto JSON si es necesario
                             JSONObject jsonResponse = new JSONObject(response);
-                            // Manejar el objeto JSON según tus necesidades
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Manejar errores de la solicitud aquí
                         Log.e("TAG", "Error en la solicitud: " + error.toString());
                     }
                 }) {
             @Override
             public byte[] getBody() {
-                // Aquí puedes especificar los datos que deseas enviar en el cuerpo de la solicitud
                 return personaJson.getBytes();
             }
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                // Configurar el encabezado Content-Type
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 return headers;
@@ -253,10 +236,7 @@ public class Registrar extends AppCompatActivity {
         LocalDate fechaIn = LocalDate.parse(selectedDate,format);
         LocalDate fechaFin = LocalDate.now();
         int total = (int) fechaIn.until(fechaFin).getYears();
-
         return total;
     }
-
-
 
 }

@@ -39,7 +39,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         setContentView(R.layout.activity_pantalla_perfil_usuario);
         getDatos(PantallaPrincipal.correoUsuario);
         Toast.makeText(getApplicationContext(), PantallaPrincipal.correoUsuario, Toast.LENGTH_LONG).show();
-        actualizarDatos();
+     actualizarDatos();
     }
 
     public void actualizarDatos(){
@@ -62,7 +62,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
 
     //Obtenr datos de Cliente
     public void getDatos(String usuario){
-        String url="http://192.168.18.5:8081/api/clientes/usuario/"+usuario;//endpoint.
+        String url="http://192.168.40.228:8081/api/clientes/usuario/"+usuario;//endpoint.
+        //String url="http://192.168.0.119:8081/api/clientes/usuario/"+usuario;//endpoint.
+        //String url="http://192.168.19.119:8081/api/clientes/usuario/"+usuario;//endpoint.
         Log.d("He","Llegue al metodo cargar cliente");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
 
@@ -98,7 +100,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
 
     //Obtener datos de persona
     public void getDatosByCedula(String cedula){
-        String url="http://192.168.18.5:8081/api/personas/"+cedula;//endpoint.
+        String url="http://192.168.40.228:8081/api/personas/"+cedula;//endpoint.
+        //String url="http://192.168.0.119:8081/api/personas/"+cedula;//endpoint.
+        //String url="http://192.168.19.119:8081/api/personas/"+cedula;//endpoint.
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
             @Override
@@ -144,8 +148,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
 
     //ACTUALIZAR DATOS DE USUARIO
     public void updateDatosUsuario(String contrasena,String usuario,Long id){
-        String url="http://192.168.18.5:8081/api/clientes/"+id;
-
+        String url="http://192.168.40.228:8081/api/clientes/"+id;
+        //String url="http://192.168.0.119:8081/api/clientes/"+id;
+        //String url="http://192.168.19.119:8081/api/clientes/"+id;
         JSONObject requestBodyUsuario = new JSONObject();
         try{
             requestBodyUsuario.put("contrasena",contrasena);
@@ -172,8 +177,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
 
     //ACTUALIZAR DATOS DE PERSONA
     public void updateDatosPersona(String nom1,String nom2, String ape1, String ape2, String tel, int edad ,String cedula){
-        String url="http://192.168.18.5:8081/api/personas/"+cedula;
-
+        String url="http://192.168.40.228:8081/api/personas/"+cedula;
+        //String url="http://192.168.0.119:8081/api/personas/"+cedula;
+        //String url="http://192.168.19.119:8081/api/personas/"+cedula;
         JSONObject requestBodyPersona = new JSONObject();
         try{
             requestBodyPersona.put("nombre",nom1);
@@ -229,6 +235,5 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         startActivity(inicio);
         finish();
     }
-
 
 }
