@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,7 +47,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class Registrar extends AppCompatActivity {
-    TextInputEditText emailText, paswordText;
+    TextInputEditText emailText, paswordText,auxcedula,auxnombre,auxnombre1,auxapelldio,auxapellido2,auxtelefono;
     Button boton1;
     TextView textView1;
     private FirebaseAuth mAuth;
@@ -65,6 +66,12 @@ public class Registrar extends AppCompatActivity {
         setContentView(R.layout.activity_registrar);
         emailText= findViewById(R.id.email);
         paswordText=findViewById(R.id.pasword);
+        auxcedula = findViewById(R.id.cedula);
+        auxnombre = findViewById(R.id.Nombre);
+        auxnombre1 = findViewById(R.id.Nombre1);
+        auxapelldio = findViewById(R.id.Apellido);
+        auxapellido2 = findViewById(R.id.Apellido1);
+        auxtelefono = findViewById(R.id.telefono);
         mAuth = FirebaseAuth.getInstance();
         boton1= findViewById(R.id.button);
         textView1 = findViewById(R.id.textViewRe);
@@ -82,36 +89,77 @@ public class Registrar extends AppCompatActivity {
             public void onClick(View v) {
                 String emailUser= emailText.getText().toString().trim();
                 String passwordlUser= paswordText.getText().toString().trim();
+                String cedula= auxcedula.getText().toString().trim();
+                String nom1= auxnombre.getText().toString().trim();
+                String nom2= auxnombre1.getText().toString().trim();
+                String ape1= auxapelldio.getText().toString().trim();
+                String ape2= auxapellido2.getText().toString().trim();
+                String cel= auxtelefono.getText().toString().trim();
                 if (TextUtils.isEmpty(emailUser)){
-                    Toast.makeText(Registrar.this, "Enten email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(passwordlUser)){
-                    Toast.makeText(Registrar.this, "Enter pasword", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
                     return;
-
+                }
+                if (TextUtils.isEmpty(cedula)|| cedula.length() != 10){
+                    Toast.makeText(getApplicationContext(), "Por favor, complete su cedula de manera correcta", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(nom1)){
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!nom1.matches("[a-zA-Z]+")) {
+                    Toast.makeText(getApplicationContext(), "Por favor, ingrese el primer nombre válido con solo letras", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(nom2)){
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!nom2.matches("[a-zA-Z]+")) {
+                    Toast.makeText(getApplicationContext(), "Por favor, ingrese el segundo nombre válido con solo letras", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(ape1)){
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!ape1.matches("[a-zA-Z]+")) {
+                    Toast.makeText(getApplicationContext(), "Por favor, ingrese el apellido paterno  válido con solo letras", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(ape2)){
+                    Toast.makeText(getApplicationContext(), "Por favor, completa todos los campos correctamente", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!ape2.matches("[a-zA-Z]+")) {
+                    Toast.makeText(getApplicationContext(), "Por favor, ingrese el apellido materno  válido con solo letras", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(cel)|| cel.length() != 10){
+                    Toast.makeText(getApplicationContext(), "Por favor, ingrese un numero de telefono valido", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 mAuth.createUserWithEmailAndPassword(emailUser, passwordlUser).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         try {
-
                             if (task.isSuccessful()){
                                 guardarPersona();
                                 //guardarClietnes();
                                 EditText auxUsuario=findViewById(R.id.email);
                                 PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
-                                Toast.makeText(Registrar.this, "Authentication Exit.",
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Registrar.this, "Authentication Exit.", Toast.LENGTH_SHORT).show();
                                 Intent intent= new Intent(getApplicationContext(),Login.class);
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(Registrar.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Registrar.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             }
                         }catch (Exception e){
-
                         }
                     }
                 });
@@ -119,7 +167,6 @@ public class Registrar extends AppCompatActivity {
         });
     }
     public void calendar(){
-
             birthDateTextView = findViewById(R.id.birthDateTextView);
             birthDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,19 +178,16 @@ public class Registrar extends AppCompatActivity {
 
     private void showDatePicker() {
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-        // Puedes personalizar las restricciones del calendario según tus necesidades.
+
         Calendar maxFecha = Calendar.getInstance();
         maxFecha.set(Calendar.YEAR, 2024);
         maxFecha.set(Calendar.MONTH, Calendar.DECEMBER);
         maxFecha.set(Calendar.DAY_OF_MONTH, 31);
         constraintsBuilder.setEnd(maxFecha.getTimeInMillis());
-
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Selecciona tu fecha de nacimiento");
         builder.setCalendarConstraints(constraintsBuilder.build());
-
         MaterialDatePicker<Long> datePicker = builder.build();
-
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
@@ -176,10 +220,6 @@ public class Registrar extends AppCompatActivity {
         persona.setEdad(calcularEdad());
         realizarSolicitudPOST("http://192.168.40.228:8081/api/personas",persona);
         guardarClietnes();
-        //realizarSolicitudPOST("http://192.168.0.119:8081/api/personas",persona);
-        //realizarSolicitudPOST("http://192.168.19.119:8081/api/personas",persona);
-
-
     }
     public void guardarClietnes() {
         EditText auxcorreo = findViewById(R.id.email);
@@ -190,11 +230,7 @@ public class Registrar extends AppCompatActivity {
         clienteNuevo.setUsuario(auxcorreo.getText().toString());
         clienteNuevo.setCedula_persona(auxcedula.getText().toString());
         realizarSolicitudPOST("http://192.168.40.228:8081/api/clientes",clienteNuevo);
-        //realizarSolicitudPOST("http://192.168.0.119:8081/api/clientes",clienteNuevo);
-        //realizarSolicitudPOST("http://192.168.19.119:8081/api/clientes",clienteNuevo);
-
     }
-
     private <T>void realizarSolicitudPOST(String url,  final T objeto) {
         RequestQueue queue = Volley.newRequestQueue(this);
         Gson gson = new Gson();
@@ -203,7 +239,6 @@ public class Registrar extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("TAG", "Respuesta del servidor: " + response);
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                         } catch (JSONException e) {
@@ -230,7 +265,6 @@ public class Registrar extends AppCompatActivity {
         };
         queue.add(stringRequest);
     }
-
     public int calcularEdad(){
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaIn = LocalDate.parse(selectedDate,format);
@@ -238,5 +272,4 @@ public class Registrar extends AppCompatActivity {
         int total = (int) fechaIn.until(fechaFin).getYears();
         return total;
     }
-
 }

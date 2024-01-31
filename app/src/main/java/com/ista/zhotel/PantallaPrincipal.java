@@ -4,19 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,10 +29,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class PantallaPrincipal extends AppCompatActivity {
-    FirebaseAuth auth;
     Button inicio;
     public  static String correoUsuario;
-    FirebaseUser user;
     RecyclerView recyclerViewhabi;
     MyAdapterHabi adapter;
     static ArrayList<Habi> habitacion = new ArrayList<>();
@@ -42,8 +39,33 @@ public class PantallaPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
+        Button button1 = findViewById(R.id.button5);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(button1, "scaleX", 1.3f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(button1, "scaleY", 1.3f);
+        scaleX.setDuration(2000);
+        scaleY.setDuration(2000);
+        scaleX.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleY.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleX.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleY.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleX.setInterpolator(new BounceInterpolator());
+        scaleY.setInterpolator(new BounceInterpolator());
+        scaleX.start();
+        scaleY.start();
+        Button button2 = findViewById(R.id.button2);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ObjectAnimator translateX = ObjectAnimator.ofFloat(button2, "translationX", -30f, 30f);
+                translateX.setDuration(200);
+                translateX.setRepeatCount(3);
+                translateX.setRepeatMode(ObjectAnimator.REVERSE);
+                translateX.start();
+                handler.postDelayed(this, 5000);
+            }
+        }, 5000);
         inicio= findViewById(R.id.button4);
-        Log.d("TAG", "Respuesta del servidor: " + correoUsuario);
         inicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,8 +93,6 @@ public class PantallaPrincipal extends AppCompatActivity {
     private void getDatos(){
         habitacion.clear();
         String url="http://192.168.40.228:8081/api/habitaciones";//endpoint.
-        //String url="http://192.168.0.119:8081/api/habitaciones";
-        //String url="http://192.168.19.119:8081/api/habitaciones";
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -90,7 +110,6 @@ public class PantallaPrincipal extends AppCompatActivity {
     }
 
     private void pasarJson( JSONArray array){
-
         for(int i=0;i<array.length();i++){
             JSONObject json=null;
             Habi habita= new Habi();

@@ -7,16 +7,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ista.zhotel.model.Habi;
 import com.ista.zhotel.model.MyAdapter;
@@ -44,6 +54,20 @@ public class Servicio extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_servicio);
+        TextView button1 = findViewById(R.id.textView9);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(button1, "scaleX", 1.3f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(button1, "scaleY", 1.3f);
+        scaleX.setDuration(2000);
+        scaleY.setDuration(2000);
+        scaleX.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleY.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleX.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleY.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleX.setInterpolator(new BounceInterpolator());
+        scaleY.setInterpolator(new BounceInterpolator());
+        scaleX.start();
+        scaleY.start();
+
         getDatos();
         recyclerView = findViewById(R.id.recyclerViewhabi);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -62,10 +86,11 @@ public class Servicio extends AppCompatActivity {
             public void onItemClick(final int position) {
                 Habi habitacionSeleccionada = (Habi) spinner.getSelectedItem();
                 if (habitacionSeleccionada != null && habitacionSeleccionada.getIdHabitaciones() != 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Servicio.this);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(Servicio.this);
                     builder.setTitle("Describa su Servicio");
                     final EditText input = new EditText(Servicio.this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    input.setTextColor(Color.DKGRAY);
                     builder.setView(input);
                     builder.setPositiveButton("Solicitar", new DialogInterface.OnClickListener() {
                         @Override
@@ -76,12 +101,24 @@ public class Servicio extends AppCompatActivity {
                             long idTipo_servicio = serviSeleccionado.getIdTipo_servicio();
                             String estado = "Pendiente";
                             guardarDatos(descripcion, idHabitaciones, idTipo_servicio, estado);
-                            new AlertDialog.Builder(Servicio.this)
-                                    .setTitle("Confirmación")
-                                    .setMessage("Servicio solicitado correctamente")
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .setIcon(android.R.drawable.ic_dialog_info)
-                                    .show();
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(Servicio.this, R.style.MyAlertDialogTheme);
+                            builder.setTitle("¡Servicio Solicitado!");
+                            builder.setMessage("Tu solicitud de servicio ha sido procesada correctamente. Estaremos en contacto contigo pronto.");
+                            builder.setIcon(android.R.drawable.ic_dialog_info);
+                            builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+
+                            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                v.vibrate(1000);
+                            }
+                            builder.show();
                         }
                     });
                     builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -102,12 +139,9 @@ public class Servicio extends AppCompatActivity {
             }
         });
     }
-
     private void getDatos(){
         servis.clear();
         String url="http://192.168.40.228:8081/api/tiposervicio";//
-        //String url="http://192.168.0.119:8081/api/tiposervicio";
-        //String url="http://192.168.19.119:8081/api/tiposervicio";
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -120,7 +154,7 @@ public class Servicio extends AppCompatActivity {
             }
         }
         );
-        Volley.newRequestQueue(this).add(jsonArrayRequest);//hacemos la peticion al API
+        Volley.newRequestQueue(this).add(jsonArrayRequest);
     }
 
     private void pasarJson( JSONArray array){
@@ -129,7 +163,7 @@ public class Servicio extends AppCompatActivity {
             Servi cliente= new Servi();
             try {
                 json=array.getJSONObject(i);
-                cliente.setIdTipo_servicio(json.getInt("idTipo_servicio"));//como viene del API
+                cliente.setIdTipo_servicio(json.getInt("idTipo_servicio"));
                 cliente.setTitulo(json.getString("titulo"));
                 cliente.setDescripcion(json.getString("descripciontipo"));
                 String base64Image = json.getString("foto");
@@ -151,8 +185,6 @@ public class Servicio extends AppCompatActivity {
 
     private void guardarDatos(String descripcion, Long idHabitaciones, Long idTipo_servicio, String estado) {
         String url = "http://192.168.40.228:8081/api/servicio";
-        // url = "http://192.168.0.119:8081/api/servicio";
-        //String url = "http://192.168.19.119:8081/api/servicio";
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("descripcion", descripcion);

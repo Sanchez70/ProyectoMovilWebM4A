@@ -23,19 +23,15 @@ import java.util.ArrayList;
 public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHolder> {
     Context context;
     ArrayList<Habi> habis;
-
     public MyAdapterHabi(Context c, ArrayList<Habi> p) {
         context = c;
         habis = p;
     }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.cardview_layout, parent, false));
-
     }
-
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         int numeroHabitacion = habis.get(position).getnHabitacion();
@@ -55,21 +51,15 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
                 PantallaReservar.decodedByte1= decodedByte;
                 PantallaReservar.idHabicionRe=idHabitaciones;
                 PantallaReservar.correoUsuRe= PantallaPrincipal.correoUsuario;
-                Log.d("TAG", "Respuesta del servidor: " + PantallaReservar.correoUsuRe);
-                Log.d("TAG","idHabitaciones"+idHabitaciones);
                 intent.putExtra("EXTRA_ID_HABITACION", habis.get(finalPosition).getIdHabitaciones());
                 context.startActivity(intent);
             }
         });
     }
-
-
-
     @Override
     public int getItemCount() {
         return habis.size();
     }
-
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView titulo, descripcion;
         ImageView imagen;
@@ -80,6 +70,4 @@ public class MyAdapterHabi extends RecyclerView.Adapter<MyAdapterHabi.MyViewHold
             imagen = itemView.findViewById(R.id.imagen);
         }
     }
-
-
 }

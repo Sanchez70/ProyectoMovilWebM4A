@@ -2,10 +2,21 @@ package com.ista.zhotel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -25,6 +36,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.ista.zhotel.model.Callback;
 import com.ista.zhotel.model.DetalleFactura;
@@ -63,9 +75,7 @@ public class PantallaReservar extends AppCompatActivity {
     public static double precio;
     public static int idHabicionRe;
     public static String correoUsuRe;
-
     public static Bitmap decodedByte1;
-
      private AutoCompleteTextView spnPersonas;
     ImageView adaptarImagen;
 
@@ -73,9 +83,33 @@ public class PantallaReservar extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_reservar);
-        //Cargar datos al spinner.
+        Button button = findViewById(R.id.button10);
+        int colorStart = Color.parseColor("#056688");
+        int colorEnd = Color.parseColor("#87CEEB");
+        ObjectAnimator anim = ObjectAnimator.ofInt(button, "backgroundColor", colorStart, colorEnd);
+        anim.setDuration(3000);
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.setRepeatCount(ValueAnimator.INFINITE);
+        anim.setRepeatMode(ValueAnimator.REVERSE);
+        anim.start();
+
+        TextView button1 = findViewById(R.id.txtTotal);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(button1, "scaleX", 1.3f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(button1, "scaleY", 1.3f);
+        scaleX.setDuration(2000);
+        scaleY.setDuration(2000);
+        scaleX.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleY.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleX.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleY.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleX.setInterpolator(new BounceInterpolator());
+        scaleY.setInterpolator(new BounceInterpolator());
+        scaleX.start();
+        scaleY.start();
+
         spnPersonas = findViewById(R.id.nroPersonas);
         adaptarImagen= findViewById(R.id.imagenBase);
+        adaptarImagen.setScaleType(ImageView.ScaleType.FIT_XY);
         adaptarImagen.setImageBitmap(decodedByte1);
         Integer[] datos={1,2,3,4};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,datos);
@@ -85,13 +119,9 @@ public class PantallaReservar extends AppCompatActivity {
         txtprecio.setText(String.valueOf(precio));
         guardarReserva();
         getDatos(correoUsuRe);
-        Log.d("TAG","CEDULA INICIANTE: " +cedula);
-
-
     }
 
     public void calendar(){
-
         txtFechaIn = findViewById(R.id.fechaInic);
         txtFechaFin = findViewById(R.id.fechafin);
         txtDias = findViewById(R.id.txtDias);
@@ -102,7 +132,6 @@ public class PantallaReservar extends AppCompatActivity {
                 showDatePickerIn();
             }
         });
-
         txtFechaFin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,15 +141,14 @@ public class PantallaReservar extends AppCompatActivity {
     }
 
     private void showDatePickerIn() {
+
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-        //Establezco una fecha límite para el inicio
         Calendar minFecha = Calendar.getInstance();
         minFecha.set(Calendar.YEAR, 2024);
         minFecha.set(Calendar.MONTH, Calendar.JANUARY);
         minFecha.set(Calendar.DAY_OF_MONTH, 1);
         constraintsBuilder.setStart(minFecha.getTimeInMillis());
 
-        //Establezco una fecha máxima para el inicio
         Calendar maxFecha = Calendar.getInstance();
         maxFecha.set(Calendar.YEAR, 2025);
         maxFecha.set(Calendar.MONTH, Calendar.APRIL);
@@ -130,13 +158,10 @@ public class PantallaReservar extends AppCompatActivity {
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Seleccione la fecha de inicio");
         builder.setCalendarConstraints(constraintsBuilder.build());
-
         MaterialDatePicker<Long> datePicker = builder.build();
-
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
-                // Manejar la fecha seleccionada
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeZone(TimeZone.getDefault());
                 calendar.setTimeInMillis(selection);
@@ -147,7 +172,6 @@ public class PantallaReservar extends AppCompatActivity {
                 txtFechaIn.setText(selectedDateIn);
             }
         });
-
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER_TAG");
     }
     
@@ -159,27 +183,22 @@ public class PantallaReservar extends AppCompatActivity {
         minFecha.set(Calendar.MONTH, Calendar.JANUARY);
         minFecha.set(Calendar.DAY_OF_MONTH, 1);
         constraintsBuilder.setStart(minFecha.getTimeInMillis());
-
         Calendar maxFecha = Calendar.getInstance();
         maxFecha.set(Calendar.YEAR, 2025);
         maxFecha.set(Calendar.MONTH, Calendar.APRIL);
         maxFecha.set(Calendar.DAY_OF_MONTH, 30);
         constraintsBuilder.setEnd(maxFecha.getTimeInMillis());
-
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         builder.setTitleText("Seleccione la fecha final");
         builder.setCalendarConstraints(constraintsBuilder.build());
-
         MaterialDatePicker<Long> datePicker = builder.build();
-
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
-                // Manejar la fecha seleccionada
+
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeZone(TimeZone.getDefault());
                 calendar.setTimeInMillis(selection);
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                 selectedDateFin = dateFormat.format(calendar.getTime());
@@ -218,9 +237,6 @@ public class PantallaReservar extends AppCompatActivity {
     }
     public void getDatos(String usuario){
         String url="http://192.168.40.228:8081/api/clientes/usuario/"+usuario;//endpoint.
-        //String url="http://192.168.0.119:8081/api/clientes/usuario/"+usuario;//endpoint.
-        //String url="http://192.168.19.119:8081/api/clientes/usuario/"+usuario;//endpoint.
-        Log.d("He","Llegue al metodo cargar cliente");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -228,7 +244,6 @@ public class PantallaReservar extends AppCompatActivity {
                     if(response.length()>0) {
                         JSONObject jsonObjectCliente = response.getJSONObject(0);
                         cedula = jsonObjectCliente.getLong("idCliente");
-                        Log.d("He", "cedula "+cedula);
                     }else{
                         Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
                     }
@@ -240,7 +255,11 @@ public class PantallaReservar extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("He",error.getMessage());
+                if (error.getMessage() != null) {
+                    Log.d("Error: Response", error.getMessage());
+                } else {
+                    Log.d("Error: Response", "El mensaje de error es null");
+                }
             }
         });
         Volley.newRequestQueue(this).add(jsonArrayRequest);
@@ -255,7 +274,6 @@ public class PantallaReservar extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("TAG", "Respuesta del servidor: " + response);
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                         } catch (JSONException e) {
@@ -296,11 +314,9 @@ public class PantallaReservar extends AppCompatActivity {
                 String fechaEntradaString = fechaEntara.getText().toString();
                 DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate fechaEntrada = LocalDate.parse(fechaEntradaString, inputFormatter);
-
                 // Obtener la fecha de salida y formatearla
                 String fechaSalidaString = fechaFin.getText().toString();
                 LocalDate fechaSalida = LocalDate.parse(fechaSalidaString, inputFormatter);
-
                 // Convertir las fechas al formato "yyyy-MM-dd"
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd",Locale.getDefault());
                 String fechaEntradaFormatted = fechaEntrada.format(outputFormatter);
@@ -310,9 +326,6 @@ public class PantallaReservar extends AppCompatActivity {
                 miReserva.setDias(Integer.valueOf(diasRece.getText().toString()));
                 Log.d("TAG","Fechas;"+fechaEntradaFormatted+fechaSalidaFormatted);
                 try {
-
-
-                    // Convertir LocalDate a java.util.Date
                     miReserva.setFechaEntrada(fechaEntradaFormatted);
                     miReserva.setFechaSalida(fechaSalidaFormatted);
                     miReserva.setIdRecepcionista(null);
@@ -321,15 +334,29 @@ public class PantallaReservar extends AppCompatActivity {
                     miReserva.setEstado("Pendiente");
                     miReserva.setnPersona(Integer.valueOf(personaRece.getText().toString()));
                     miReserva.setTotal(Double.valueOf(totalRece.getText().toString()));
-                    Log.d("TAG", "RESERVA:" + miReserva.toString());
                     realizarSolicitudPOST("http://192.168.40.228:8081/api/reservas", miReserva);
-                    //realizarSolicitudPOST("http://192.168.0.119:8081/api/reservas", miReserva);
-                    //realizarSolicitudPOST("http://192.168.19.119:8081/api/reservas", miReserva);
                     crearEncabezad();
                     crearDetalle();
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(PantallaReservar.this, R.style.MyAlertDialogTheme);
+                    builder.setTitle("¡Reserva Solicitada!");
+                    builder.setMessage("Tu solicitud de Reservacion ha sido procesada correctamente. Estaremos en contacto contigo pronto.");
+                    builder.setIcon(android.R.drawable.ic_dialog_info);
+                    builder.setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Principal(null);
+                        }
+                    });
+
+                    Vibrator va = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        va.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                    } else {
+                        va.vibrate(1000);
+                    }
+                    builder.show();
                 } catch (DateTimeParseException | NumberFormatException e) {
                     e.printStackTrace();
-                    // Manejar el caso en el que la fecha o el número de personas no son válidos
                     Toast.makeText(getApplicationContext(), "Fecha o número de personas no válidos", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -338,20 +365,14 @@ public class PantallaReservar extends AppCompatActivity {
 
 public void buscarReser(final EncabezadoCallBack callBack){
     String url="http://192.168.40.228:8081/api/reservas";//endpoint.
-    //String url="http://192.168.0.119:8081/api/reservas";//endpoint.
-    //String url="http://192.168.19.119:8081/api/reservas";//endpoint.
-    Log.d("He","Llegue al metodo cargar reserva");
     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
         @Override
         public void onResponse(JSONArray response) {
             try {
                 if(response.length()>0) {
-
                     JSONObject jsonObjectCliente = response.getJSONObject(response.length() -1);
                     idReserva = jsonObjectCliente.getLong("idReserva");
                     callBack.onReservaObtenido(idReserva);
-                    Log.d("He", "id encabezado:  " + idReserva);
-
                 }else{
                     Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
                 }
@@ -363,7 +384,6 @@ public void buscarReser(final EncabezadoCallBack callBack){
     }, new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-
             Log.d("He",error.getMessage());
         }
     });
@@ -373,9 +393,6 @@ public void buscarReser(final EncabezadoCallBack callBack){
 
 public void buscarEcabezado(final Callback callback){
     String url="http://192.168.40.228:8081/api/encabezadofactura";//endpoint.
-    //String url="http://192.168.0.119:8081/api/encabezadofactura";//endpoint.
-    //String url="http://192.168.19.119:8081/api/encabezadofactura";//endpoint.
-    Log.d("He","Llegue al metodo cargar detalle");
     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
         @Override
         public void onResponse(JSONArray response) {
@@ -383,7 +400,6 @@ public void buscarEcabezado(final Callback callback){
                 if(response.length()>0) {
                     JSONObject jsonObjectCliente = response.getJSONObject(response.length() -1);
                     idEncabezado = jsonObjectCliente.getLong("idEncabezado");
-                    Log.d("He", "id encabezado:  " + idEncabezado);
                     callback.onEncabezadoObtenido(idEncabezado);
                 }else{
                     Toast.makeText(getApplicationContext(), "Cliente no encontrado", Toast.LENGTH_LONG).show();
@@ -403,7 +419,6 @@ public void buscarEcabezado(final Callback callback){
 }
 
 public void crearEncabezad(){
-
     buscarReser(new EncabezadoCallBack() {
         @Override
         public void onReservaObtenido(long idReserva) {
@@ -420,8 +435,6 @@ public void crearEncabezad(){
             encabezado.setIdReserva(rservas);
             encabezado.setTotal(Double.valueOf(totalRece.getText().toString()));
             realizarSolicitudPOST("http://192.168.40.228:8081/api/encabezadofactura", encabezado);
-            //realizarSolicitudPOST("http://192.168.0.119:8081/api/encabezadofactura", encabezado);
-            //realizarSolicitudPOST("http://192.168.19.119:8081/api/encabezadofactura", encabezado);
         }
 
         @Override
@@ -430,26 +443,26 @@ public void crearEncabezad(){
         }
     });
 
-
     }
     public void crearDetalle(){
         buscarEcabezado(new Callback() {
             @Override
             public void onEncabezadoObtenido(long idEncabezado) {
                 Long restabel= idEncabezado;
-                Log.d("He", "id encabezado en el crear:  " + restabel);
                 DetalleFactura detalle= new DetalleFactura();
                 detalle.setIdEncabezado(restabel);
                 detalle.setSubTotal(precio);
                 realizarSolicitudPOST("http://192.168.40.228:8081/api/detallefactura", detalle);
-                //realizarSolicitudPOST("http://192.168.0.119:8081/api/detallefactura", detalle);
-                //realizarSolicitudPOST("http://192.168.19.119:8081/api/detallefactura", detalle);
             }
-
             @Override
             public void onError(String errorMessage) {
                 Log.d("He", "callback  " + errorMessage);
             }
         });
+    }
+
+    public void Principal(View view){
+        Intent princi = new Intent(this, PantallaPrincipal.class);
+        startActivity(princi);
     }
 }
