@@ -115,20 +115,22 @@ public class PantallaPrincipal extends AppCompatActivity {
             Habi habita= new Habi();
             try {
                 json=array.getJSONObject(i);
-                habita.setIdHabitaciones((long) json.getInt("idHabitaciones"));//como viene del API
-                habita.setnHabitacion(json.getInt("nHabitacion"));
-                habita.setDescriphabi(json.getString("descriphabi"));
-                habita.setPrecio(json.getDouble("precio"));
-                String base64Image = json.getString("foto");
-                if (base64Image.startsWith("data:image/jpeg;base64,")) {
-                    base64Image = base64Image.substring("data:image/jpeg;base64,".length());
-                } else if (base64Image.startsWith("data:image/jpg;base64,")) {
-                    base64Image = base64Image.substring("data:image/jpg;base64,".length());
-                } else if (base64Image.startsWith("data:image/png;base64,")) {
-                    base64Image = base64Image.substring("data:image/png;base64,".length());
+                if (json.getString("estado").equals("Disponible")) {
+                    habita.setIdHabitaciones((long) json.getInt("idHabitaciones"));//como viene del API
+                    habita.setnHabitacion(json.getInt("nHabitacion"));
+                    habita.setDescriphabi(json.getString("descriphabi"));
+                    habita.setPrecio(json.getDouble("precio"));
+                    String base64Image = json.getString("foto");
+                    if (base64Image.startsWith("data:image/jpeg;base64,")) {
+                        base64Image = base64Image.substring("data:image/jpeg;base64,".length());
+                    } else if (base64Image.startsWith("data:image/jpg;base64,")) {
+                        base64Image = base64Image.substring("data:image/jpg;base64,".length());
+                    } else if (base64Image.startsWith("data:image/png;base64,")) {
+                        base64Image = base64Image.substring("data:image/png;base64,".length());
+                    }
+                    habita.setFoto(base64Image);
+                    habitacion.add(habita);
                 }
-                habita.setFoto(base64Image);
-                habitacion.add(habita);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

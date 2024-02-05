@@ -8,6 +8,7 @@ public class Habi {
     private int idCategoria;
     private String descriphabi;
     private String foto;
+    private String estado;
 
     private String numeroHabitacion;
 
@@ -70,6 +71,14 @@ public class Habi {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
 

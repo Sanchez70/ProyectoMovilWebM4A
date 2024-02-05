@@ -196,21 +196,21 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView9"
+                    android:id="@+id/pgTarjeta"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/icons8_visa_48"
                     tools:srcCompat="@drawable/icons8_visa_48" />
 
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/pgtransfer"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/icons8_emoji_de_tarjeta_de_cr_dito_48"
                     tools:srcCompat="@drawable/icons8_emoji_de_tarjeta_de_cr_dito_48" />
 
                 <ImageView
-                    android:id="@+id/imageView11"
+                    android:id="@+id/pgEfectivo"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/icons8_banco_48"

@@ -31,6 +31,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -67,6 +68,10 @@ public class PantallaReservar extends AppCompatActivity {
     private TextView txtFechaFin;
     private String selectedDateIn;
     private String selectedDateFin;
+    private String descripHabi;
+    private int numPiso;
+    private int numHabi;
+    private Long idPago;
     public  Long cedula;
     public  Long idReserva;
     public  Long idEncabezado;
@@ -119,6 +124,8 @@ public class PantallaReservar extends AppCompatActivity {
         txtprecio.setText(String.valueOf(precio));
         guardarReserva();
         getDatos(correoUsuRe);
+        getHabitacion(idHabicionRe);
+        asignarPago();
     }
 
     public void calendar(){
@@ -329,7 +336,7 @@ public class PantallaReservar extends AppCompatActivity {
                     miReserva.setFechaEntrada(fechaEntradaFormatted);
                     miReserva.setFechaSalida(fechaSalidaFormatted);
                     miReserva.setIdRecepcionista(null);
-                    miReserva.setIdPago(null);
+                    miReserva.setIdPago(idPago);
                     miReserva.setIdCliente(cedula);
                     miReserva.setEstado("Pendiente");
                     miReserva.setnPersona(Integer.valueOf(personaRece.getText().toString()));
@@ -337,6 +344,7 @@ public class PantallaReservar extends AppCompatActivity {
                     realizarSolicitudPOST("http://192.168.40.228:8081/api/reservas", miReserva);
                     crearEncabezad();
                     crearDetalle();
+                    cambiarEstado(idHabicionRe);
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(PantallaReservar.this, R.style.MyAlertDialogTheme);
                     builder.setTitle("¡Reserva Solicitada!");
                     builder.setMessage("Tu solicitud de Reservacion ha sido procesada correctamente. Estaremos en contacto contigo pronto.");
@@ -465,4 +473,93 @@ public void crearEncabezad(){
         Intent princi = new Intent(this, PantallaPrincipal.class);
         startActivity(princi);
     }
+
+    public void getHabitacion(int id){
+        String url="http://192.168.40.228:8081/api/habitaciones/"+id;//endpoint.
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(response.length()>0) {
+                        descripHabi = response.getString("descriphabi");
+                        numHabi = response.getInt("nHabitacion");
+                        numPiso = response.getInt("nPiso");
+                        Log.d("He","Descripcipn habi"+ descripHabi);
+                        Log.d("He", "Numero habi"+numHabi);
+                        Log.d("He", "Numero piso"+numPiso);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Habitacion no encontrada", Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException j) {
+                    j.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("JSON ERROR",error.getMessage());
+            }
+        });
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
+    }
+
+    public void cambiarEstado(int id){
+            String url="http://192.168.40.228:8081/api/habitaciones/"+id;
+            JSONObject requestBodyHabitacion = new JSONObject();
+            try{
+                requestBodyHabitacion.put("estado","Ocupado");
+                requestBodyHabitacion.put("descriphabi",descripHabi);
+                requestBodyHabitacion.put("foto",decodedByte1.toString());
+                requestBodyHabitacion.put("nHabitacion",numHabi);
+                requestBodyHabitacion.put("nPiso",numPiso);
+                requestBodyHabitacion.put("precio",precio);
+            }catch(JSONException j){
+                j.printStackTrace();
+            }
+
+            JsonObjectRequest jsonObjectRequestUsuario = new JsonObjectRequest(Request.Method.PUT, url, requestBodyHabitacion, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(getApplicationContext(), "ACTUALIZACIÓN CORRECTA", Toast.LENGTH_LONG).show();
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            Volley.newRequestQueue(this).add(jsonObjectRequestUsuario);
+        }
+
+        private void asignarPago(){
+            ImageView pagoTarjeta = findViewById(R.id.pgTarjeta);
+            ImageView pagoTransferencia = findViewById(R.id.pgtransfer);
+            ImageView pagoEfectivo = findViewById(R.id.pgEfectivo);
+            pagoTarjeta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    idPago=1l;
+                    Log.d("He","Pago "+ idPago);
+                }
+            });
+
+            pagoTransferencia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    idPago=2l;
+                    Log.d("He","Pago "+ idPago);
+                }
+            });
+
+            pagoEfectivo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    idPago=3l;
+                    Log.d("He","Pago "+ idPago);
+                }
+            });
+        }
+
 }
