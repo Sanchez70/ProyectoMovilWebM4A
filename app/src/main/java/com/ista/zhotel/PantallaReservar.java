@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -18,6 +20,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -113,6 +116,17 @@ public class PantallaReservar extends AppCompatActivity {
         scaleY.setInterpolator(new BounceInterpolator());
         scaleX.start();
         scaleY.start();
+
+        ImageView imagen = (ImageView) findViewById(R.id.pgTarjeta);
+        imagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TranslateAnimation animacion = new TranslateAnimation(0, 100, 0, 100);
+                animacion.setDuration(1000); // duración en milisegundos
+                animacion.setFillAfter(false); // Si quieres que la imagen se quede en la posición final
+                imagen.startAnimation(animacion);
+            }
+        });
 
         spnPersonas = findViewById(R.id.nroPersonas);
         adaptarImagen= findViewById(R.id.imagenBase);
@@ -535,33 +549,37 @@ public void crearEncabezad(){
             Volley.newRequestQueue(this).add(jsonObjectRequestUsuario);
         }
 
-        private void asignarPago(){
-            ImageView pagoTarjeta = findViewById(R.id.pgTarjeta);
-            ImageView pagoTransferencia = findViewById(R.id.pgtransfer);
-            ImageView pagoEfectivo = findViewById(R.id.pgEfectivo);
-            pagoTarjeta.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    idPago=1l;
-                    Log.d("He","Pago "+ idPago);
-                }
-            });
+    private void asignarPago(){
+        final ImageView pagoTarjeta = findViewById(R.id.pgTarjeta);
+        final ImageView pagoTransferencia = findViewById(R.id.pgtransfer);
+        final ImageView pagoEfectivo = findViewById(R.id.pgEfectivo);
 
-            pagoTransferencia.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    idPago=2l;
-                    Log.d("He","Pago "+ idPago);
-                }
-            });
-
-            pagoEfectivo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    idPago=3l;
-                    Log.d("He","Pago "+ idPago);
-                }
-            });
-        }
-
+        pagoTarjeta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                idPago=1l;
+                pagoTarjeta.setBackgroundResource(R.drawable.border_red);
+                pagoTransferencia.setBackground(null);
+                pagoEfectivo.setBackground(null);
+            }
+        });
+        pagoTransferencia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                idPago=2l;
+                pagoTransferencia.setBackgroundResource(R.drawable.border_red);
+                pagoTarjeta.setBackground(null);
+                pagoEfectivo.setBackground(null);
+            }
+        });
+        pagoEfectivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                idPago=3l;
+                pagoEfectivo.setBackgroundResource(R.drawable.border_red);
+                pagoTarjeta.setBackground(null);
+                pagoTransferencia.setBackground(null);
+            }
+        });
+    }
 }
