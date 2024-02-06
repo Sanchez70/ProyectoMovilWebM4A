@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,7 +39,6 @@ public class Login extends AppCompatActivity {
     Button botonLogin;
     TextView textView2;
     private FirebaseAuth mAuth;
-
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         emailTextLogin= findViewById(R.id.emailLogin);
@@ -77,7 +78,6 @@ public class Login extends AppCompatActivity {
                 if (TextUtils.isEmpty(passwordlUser)){
                     Toast.makeText(Login.this, "Enter pasword", Toast.LENGTH_SHORT).show();
                     return;
-
                 }
                 mAuth.signInWithEmailAndPassword(emailUser, passwordlUser).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -94,19 +94,15 @@ public class Login extends AppCompatActivity {
                             EditText auxUsuario=findViewById(R.id.emailLogin);
                             PantallaPrincipal.correoUsuario= auxUsuario.getText().toString();
                             getDatos(emailUser.toString(),passwordlUser.toString());
-
-
                         }
                     }
                 });
             }
         });
     }
-
     public void getDatos(String usuario, String contrasena){
         String url="http://192.168.40.228:8081/api/clientes/usuario/"+usuario;//endpoint.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
-
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -116,8 +112,6 @@ public class Login extends AppCompatActivity {
                             Intent intent= new Intent(getApplicationContext(),PantallaPrincipal.class);
                             startActivity(intent);
                             finish();
-
-
                         }else{
                             Toast.makeText(getApplicationContext(), "Contraseña Incorrecta", Toast.LENGTH_LONG).show();
                         }
@@ -127,7 +121,6 @@ public class Login extends AppCompatActivity {
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override

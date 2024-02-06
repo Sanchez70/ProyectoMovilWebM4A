@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,7 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
     private int edad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_perfil_usuario);
         getDatos(PantallaPrincipal.correoUsuario);
@@ -59,11 +61,9 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
             }
         });
     }
-
     public void getDatos(String usuario){
         String url="http://192.168.40.228:8081/api/clientes/usuario/"+usuario;//endpoint.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
-
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -83,7 +83,6 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -124,7 +123,6 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
                 } catch (JSONException j) {
                     j.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -134,8 +132,6 @@ public class PantallaPerfilUsuario extends AppCompatActivity {
         });
         Volley.newRequestQueue(this).add(jsonObjectRequest);
     }
-
-
     //ACTUALIZAR DATOS DE USUARIO
     public void updateDatosUsuario(String contrasena,String usuario,Long id){
         String url="http://192.168.40.228:8081/api/clientes/"+id;
