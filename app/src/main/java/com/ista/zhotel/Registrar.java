@@ -220,7 +220,7 @@ public class Registrar extends AppCompatActivity {
         persona.setApellido2(auxapellido2.getText().toString());
         persona.setTelefono(auxtelefono.getText().toString());
         persona.setEdad(calcularEdad());
-        realizarSolicitudPOST("http://192.168.40.228:8081/api/personas",persona);
+        realizarSolicitudPOST("http://192.168.12.164:8081/api/personas",persona);
         guardarClietnes();
     }
     public void guardarClietnes() {
@@ -231,7 +231,7 @@ public class Registrar extends AppCompatActivity {
         clienteNuevo.setContrasena(auxContraseña.getText().toString());
         clienteNuevo.setUsuario(auxcorreo.getText().toString());
         clienteNuevo.setCedula_persona(auxcedula.getText().toString());
-        realizarSolicitudPOST("http://192.168.40.228:8081/api/clientes",clienteNuevo);
+        realizarSolicitudPOST("http://192.168.12.164:8081/api/clientes",clienteNuevo);
     }
     private <T>void realizarSolicitudPOST(String url,  final T objeto) {
         RequestQueue queue = Volley.newRequestQueue(this);

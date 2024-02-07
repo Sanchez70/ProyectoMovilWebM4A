@@ -259,7 +259,7 @@ public class PantallaReservar extends AppCompatActivity {
         }
     }
     public void getDatos(String usuario){
-        String url="http://192.168.40.228:8081/api/clientes/usuario/"+usuario;//endpoint.
+        String url="http://192.168.12.164:8081/api/clientes/usuario/"+usuario;//endpoint.
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -357,7 +357,7 @@ public class PantallaReservar extends AppCompatActivity {
                     miReserva.setEstado("Pendiente");
                     miReserva.setnPersona(Integer.valueOf(personaRece.getText().toString()));
                     miReserva.setTotal(Double.valueOf(totalRece.getText().toString()));
-                    realizarSolicitudPOST("http://192.168.40.228:8081/api/reservas", miReserva);
+                    realizarSolicitudPOST("http://192.168.12.164:8081/api/reservas", miReserva);
                     crearEncabezad();
                     crearDetalle();
                     cambiarEstado(idHabicionRe);
@@ -388,7 +388,7 @@ public class PantallaReservar extends AppCompatActivity {
     }
 
 public void buscarReser(final EncabezadoCallBack callBack){
-    String url="http://192.168.40.228:8081/api/reservas";//endpoint.
+    String url="http://192.168.12.164:8081/api/reservas";//endpoint.
     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
         @Override
         public void onResponse(JSONArray response) {
@@ -416,7 +416,7 @@ public void buscarReser(final EncabezadoCallBack callBack){
 }
 
 public void buscarEcabezado(final Callback callback){
-    String url="http://192.168.40.228:8081/api/encabezadofactura";//endpoint.
+    String url="http://192.168.12.164:8081/api/encabezadofactura";//endpoint.
     JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
         @Override
         public void onResponse(JSONArray response) {
@@ -458,7 +458,7 @@ public void crearEncabezad(){
             encabezado.setFechaFactura(fechaFactura);
             encabezado.setIdReserva(rservas);
             encabezado.setTotal(Double.valueOf(totalRece.getText().toString()));
-            realizarSolicitudPOST("http://192.168.40.228:8081/api/encabezadofactura", encabezado);
+            realizarSolicitudPOST("http://192.168.12.164:8081/api/encabezadofactura", encabezado);
         }
 
         @Override
@@ -476,7 +476,7 @@ public void crearEncabezad(){
                 DetalleFactura detalle= new DetalleFactura();
                 detalle.setIdEncabezado(restabel);
                 detalle.setSubTotal(precio);
-                realizarSolicitudPOST("http://192.168.40.228:8081/api/detallefactura", detalle);
+                realizarSolicitudPOST("http://192.168.12.164:8081/api/detallefactura", detalle);
             }
             @Override
             public void onError(String errorMessage) {
@@ -491,7 +491,7 @@ public void crearEncabezad(){
     }
 
     public void getHabitacion(int id){
-        String url="http://192.168.40.228:8081/api/habitaciones/"+id;//endpoint.
+        String url="http://192.168.12.164:8081/api/habitaciones/"+id;//endpoint.
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -521,7 +521,7 @@ public void crearEncabezad(){
     }
 
     public void cambiarEstado(int id){
-            String url="http://192.168.40.228:8081/api/habitaciones/"+id;
+            String url="http://192.168.12.164:8081/api/habitaciones/"+id;
             JSONObject requestBodyHabitacion = new JSONObject();
             try{
                 requestBodyHabitacion.put("estado","Ocupado");

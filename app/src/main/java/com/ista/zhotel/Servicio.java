@@ -135,7 +135,7 @@ public class Servicio extends AppCompatActivity {
     }
     private void getDatos(){
         servis.clear();
-        String url="http://192.168.40.228:8081/api/tiposervicio";//
+        String url="http://192.168.12.164:8081/api/tiposervicio";//
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -178,7 +178,7 @@ public class Servicio extends AppCompatActivity {
     }
 
     private void guardarDatos(String descripcion, Long idHabitaciones, Long idTipo_servicio, String estado) {
-        String url = "http://192.168.40.228:8081/api/servicio";
+        String url = "http://192.168.12.164:8081/api/servicio";
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("descripcion", descripcion);
